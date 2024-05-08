@@ -16,5 +16,6 @@ class Products extends Model
         'stock',
         'brand_id',
         'category_id',
+        'slug',
     ];
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\Home\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +26,8 @@ use App\Http\Controllers\PaymentsController;
 
 // Landing Page
 
-Route::get('/', function () {
-    return view('landing.index');
-});
 Route::prefix('/')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', function () {
         return view('landing.shop.shop');
     });

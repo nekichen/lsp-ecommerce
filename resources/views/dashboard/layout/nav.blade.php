@@ -6,7 +6,7 @@
         {{-- Dashboard --}}
         <li class="relative px-6 py-3">
             @if (request()->routeIs('dashboard'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
             <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-100' : '' }}"
@@ -26,11 +26,11 @@
     <ul>
         {{-- CATEGORIES --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('categories.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('categories.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('categories.index') ? 'text-gray-800 dark:text-gray-100' : '' }}"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('categories.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('categories.index') }}">
                 <!-- https://feathericons.dev/?search=tag&iconset=feather -->
                 <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -44,13 +44,13 @@
         </li>
         {{-- BRANDS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('brands.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('brands.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('brands.index') ? 'text-gray-800 dark:text-gray-100' : '' }}"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('brands.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('brands.index') }}">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4/6 h-5" fill="none" stroke="currentColor"
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
                     <line x1="7" x2="7.01" y1="7" y2="7" />
@@ -60,11 +60,11 @@
         </li>
         {{-- SIZES --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('sizes.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('sizes.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('sizes.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('sizes.index') }}">
                 <!-- https://feathericons.dev/?search=bar-chart2&iconset=feather -->
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 inline-block" fill="none"
@@ -78,14 +78,14 @@
         </li>
         {{-- PRODUCTS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('products.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('products.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('products.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('products.index') }}">
                 <!-- https://feathericons.dev/?search=clipboard&iconset=feather -->
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4/6 h-5" fill="none" stroke="currentColor"
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
                     <rect height="4" rx="1" ry="1" width="8" x="8" y="2" />
@@ -96,12 +96,12 @@
         </li>
         {{-- ORDERS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('orders.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('orders.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
             <a href="{{ route('orders.index') }}"
-                class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('orders.*') ? 'text-gray-800 dark:text-gray-100' : '' }}">
                 <svg svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5" fill="none"
                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
@@ -113,12 +113,12 @@
         </li>
         {{-- PAYMENTS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('payments.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('payments.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
             <a href="{{ route('payments.index') }}"
-                class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('payments.*') ? 'text-gray-800 dark:text-gray-100' : '' }}">
                 <!-- https://feathericons.dev/?search=dollar-sign&iconset=feather -->
                 <svg class="w-5 h-5" viewBox="0 0 24 24" width="24" height="24"
                     class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
@@ -132,11 +132,11 @@
         </li>
         {{-- CUSTOMERS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('customers.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('customers.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('customers.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('customers.index') }}">
                 <!-- https://feathericons.dev/?search=user-check&iconset=feather -->
                 <svg class="w-5 h-5" viewBox="0 0 24 24" width="24" height="24" class="main-grid-item-icon"
@@ -152,11 +152,11 @@
         </li>
         {{-- USERS --}}
         <li class="relative px-6 py-3">
-            @if (request()->routeIs('users.index'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+            @if (request()->routeIs('users.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"></span>
             @endif
-            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('users.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
                 href="{{ route('users.index') }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -219,7 +219,7 @@
     </ul>
     {{-- <div class="px-6 my-6">
         <button
-            class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-orange-600 border border-transparent rounded-lg active:bg-orange-600 hover:bg-orange-700 focus:outline-none focus:shadow-outline-orange">
             Create account
             <span class="ml-2" aria-hidden="true">+</span>
         </button>

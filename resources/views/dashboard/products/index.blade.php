@@ -11,7 +11,7 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                         <th class="px-4 py-3">No</th>
-                        {{-- <th class="px-4 py-3">Image</th> --}}
+                        <th class="px-4 py-3">Image</th>
                         <th class="px-4 py-3">Name</th>
                         <th class="px-4 py-3">SKU</th>
                         <th class="px-4 py-3">Stock</th>
@@ -21,14 +21,21 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    @foreach ($products and $images as $i => $item)
+                    @foreach ($products as $i => $item)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
                                 {{ $i + 1 . '. ' }}
                             </td>
-                            {{-- <td class="px-4 py-3">
-                                {{ $item->image ?? '-' }}
-                            </td> --}}
+                            @php($image = $images->firstWhere('product_id', $item->id))
+                            @if ($image)
+                                <td class="px-4 py-3">
+                                    <img src="storage/{{ $image->image }}" alt="{{ $image->image }}">
+                                </td>
+                            @else
+                                <td class="px-4 py-3">
+                                    -
+                                </td>
+                            @endif
                             <td class="px-4 py-3">
                                 {{ $item->name }}
                             </td>
