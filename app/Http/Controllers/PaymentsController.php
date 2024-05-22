@@ -17,13 +17,12 @@ class PaymentsController extends Controller
     public function index()
     {
         //
-        $data = Payments::paginate(10);
+        $payments = Payments::paginate(10);
+        $customers = Customers::all();
+        $orders = Orders::all();
 
-        return view('dashboard.payments.index', compact('data'), [
-            'payments' => Payments::all(),
+        return view('dashboard.payments.index', compact('payments', 'customers', 'orders'), [
             'create' => route('payments.create'),
-            'customers' => Customers::all(),
-            'orders' => Orders::all(),
         ]);
     }
 

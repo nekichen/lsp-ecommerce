@@ -19,13 +19,12 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $data = Products::paginate(10);
+        $products = Products::paginate(10);
+        $images = ProductImages::all();
+        $brands = Brands::all();
+        $categories = Categories::all();
 
-        return view('dashboard.products.index', compact('data'), [
-            "products" => Products::all(),
-            "brands" => Brands::all(),
-            "categories" => Categories::all(),
-            "images" => ProductImages::all(),
+        return view('dashboard.products.index', compact('products', 'images', 'brands', 'categories'), [
             "create" => route('products.create'),
         ]); 
     }
@@ -38,11 +37,11 @@ class ProductsController extends Controller
     public function create()
     {
         //
-        return view('dashboard.products.create', [
-            "brands" => Brands::all(),
-            "categories" => Categories::all(),
-            "images" => ProductImages::all(),
-        ]);
+        $brands = Brands::all();
+        $categories = Categories::all();
+        $images = ProductImages::all();
+
+        return view('dashboard.products.create', compact('brands', 'categories', 'images'));
     }
 
     /**
@@ -53,7 +52,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate incoming request data
         $data = $request->validate([
             'name' => 'required',
             'slug' => 'required',
@@ -65,33 +64,33 @@ class ProductsController extends Controller
             'category_id' => 'required',
         ]);
 
-        $product = Products::create($data); 
+        // Create a new product
+        $product = Products::create($data);
 
-        // Check if $product exists
-        if ($product) {
-            $product_image = new ProductImages();
-            $product_image->product_id = $product->id;
+        // Validate images separately
+        $request->validate([
+            'images.*' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
 
-            if ($request->validate(['image'])) {
-            // Validate the uploaded file
-                $request->validate([
-                    'image' => 'image|mimes:jpeg,png,jpg|max:2048',
-                ]);
-
-                $image = $request->file('image');
-                // $image_name = time() . '_' . $data['slug'] . '.' . $image->getClientOriginalExtension();
-                $product_image->image = Storage::disk('public')->putFileAs('images/products', $image);
-            } else {
-                // If no image uploaded, set image field to null
-                $product_image->image = null;
+        // Check if the product was created successfully
+        if ($product && $request->hasFile('image')) {
+            foreach ($request->file('image') as $image) {
+                // Handle the file upload
+                $image_path = $image->store('images/products', 'public');
+    
+                // Initialize a new ProductImages instance
+                $product_image = new ProductImages();
+                $product_image->product_id = $product->id;
+                $product_image->image = $image_path;
+    
+                // Save the product image record
+                $product_image->save();
             }
-
-            $product_image->save();
         }
 
-
-        return redirect()->route('products.index')->with('message', 'Product added successfully');
+        return redirect()->route('products.index')->with('message', 'Product created successfully');
     }
+
 
     /**
      * Display the specified resource.
@@ -113,6 +112,16 @@ class ProductsController extends Controller
     public function edit($id)
     {
         //
+        $product = Products::find($id);
+        $brands = Brands::all();
+        $categories = Categories::all();
+        // $images = ProductImages::all();
+
+        if (!$product) {
+            return redirect()->route('products.index')->with('message', 'Product not found');
+        }
+
+        return view('dashboard.products.edit', compact('product', 'brands', 'categories'));
     }
 
     /**
@@ -125,6 +134,22 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data = $request->validate([
+            'name' => 'required',
+            'slug' => 'required',
+            'sku' => 'required',
+            'stock' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+            'brand_id' => 'required',
+            'category_id' => 'required',
+            'active' => 'required',
+        ]);
+
+        Products::where('id', $id)->update($data);
+
+        return redirect()->route('products.index')->with('message', 'Product updated successfully');
+
     }
 
     /**

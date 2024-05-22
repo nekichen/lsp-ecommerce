@@ -15,9 +15,9 @@ class OrdersController extends Controller
     public function index()
     {
         //
-        $data = Orders::paginate(10);
+        $orders = Orders::paginate(10);
 
-        return view('dashboard.orders.index', compact('data'), [
+        return view('dashboard.orders.index', compact('orders'), [
             'orders' => Orders::all(),
             'create' => route('orders.create'),
         ]);

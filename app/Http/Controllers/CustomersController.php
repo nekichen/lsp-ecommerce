@@ -16,10 +16,9 @@ class CustomersController extends Controller
     public function index()
     {
         //
-        $data = Customers::paginate(10);
+        $customers = Customers::paginate(10);
 
-        return view('dashboard.customers.index', compact('data'), [
-            'customers' => Customers::all(),
+        return view('dashboard.customers.index', compact('customers'), [
             'create' => route('customers.create'),
         ]);
     }

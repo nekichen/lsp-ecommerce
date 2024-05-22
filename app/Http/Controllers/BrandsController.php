@@ -15,10 +15,9 @@ class BrandsController extends Controller
     public function index()
     {
         //
-        $data = Brands::paginate(10);
+        $brands = Brands::paginate(10);
 
-        return view('dashboard.brands.index', compact('data'), [
-            "brands" => Brands::all(),
+        return view('dashboard.brands.index', compact('brands'), [
             "create" => route('brands.create'),
         ]);
     }

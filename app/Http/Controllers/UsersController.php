@@ -15,10 +15,9 @@ class UsersController extends Controller
     public function index()
     {
         //
-        $data = User::paginate(10);
+        $users = User::paginate(10);
 
-        return view('dashboard.users.index', compact('data'), [
-            "users" => User::all(),
+        return view('dashboard.users.index', compact('users'), [
             "create" => route('users.create'),
         ]);
     }

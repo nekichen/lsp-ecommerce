@@ -26,7 +26,7 @@ class AdminController extends Controller
         if ($credentials->passes()) {
             if (Auth::guard('admin')->attempt([
                 'email' => $request->email, 
-                'password' => $request->password], 
+                'password' => $request->password],
                 $request->get('remember'))) 
             {
                 $users = Auth::guard('admin')->user();

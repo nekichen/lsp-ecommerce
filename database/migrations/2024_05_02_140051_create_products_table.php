@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->float('price');
             $table->integer('stock');
             $table->text('description');
+            $table->enum('active', ['yes', 'no'])->default('no');
             $table->timestamps();
         });
     }

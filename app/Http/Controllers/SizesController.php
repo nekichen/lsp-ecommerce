@@ -15,8 +15,9 @@ class SizesController extends Controller
     public function index()
     {
         //
-        return view('dashboard.sizes.index', [
-            "sizes" => Sizes::all(),
+        $sizes = Sizes::paginate(10);
+
+        return view('dashboard.sizes.index', compact('sizes'), [
             "create" => route('sizes.create'),
         ]);
     }
@@ -48,7 +49,7 @@ class SizesController extends Controller
 
         Sizes::create($data);
 
-        return redirect()->route('sizes.index')->with('message', 'Category created successfully');
+        return redirect()->route('sizes.index')->with('message', 'Size created successfully');
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsersController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\Home\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,12 +30,8 @@ use App\Http\Controllers\Home\HomeController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('shop', function () {
-        return view('landing.shop.shop');
-    });
-    Route::get('shop-details', function () {
-        return view('landing.shop.shop-details');
-    })->name('shop-details');
+    Route::get('shop', [ShopController::class, 'index']);
+    Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
     Route::get('cart', function () {
         return view('landing.shop.shopping-cart');
     });

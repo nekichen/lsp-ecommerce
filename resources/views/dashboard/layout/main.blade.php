@@ -4,10 +4,10 @@
             <h2 class="w-full my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 @yield('page')
             </h2>
-            @if (!request()->routeIs('dashboard') && !request()->routeIs('*.create') && !request()->routeIs('*.edit'))
+            @if (!request()->routeIs('dashboard') && !request()->routeIs('*.create') && !request()->routeIs('*.edit') && !request()->routeIs('payments.*') && !request()->routeIs('orders.*'))
                 <div class="w-full inline-flex justify-end items-center">
                     <a href="@yield('link')"
-                        class="flex fixed justify-between mt-6 px-4 py-2 text-sm font-semibold leading-5 text-white transition-colors duration-150 bg-orange-600 border border-transparent rounded-lg active:bg-orange-600 hover:bg-orange-700 focus:outline-none focus:shadow-outline-orange">
+                        class="flex justify-between mt-6 px-4 py-2 text-sm font-semibold leading-5 text-white transition-colors duration-150 bg-orange-600 border border-transparent rounded-lg active:bg-orange-600 hover:bg-orange-700 focus:outline-none focus:shadow-outline-orange">
                         <!-- https://feathericons.dev/?search=file-plus&iconset=feather -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4"
                             fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

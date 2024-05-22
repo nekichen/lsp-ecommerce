@@ -16,10 +16,9 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-        $data = Categories::paginate(10);
+        $categories = Categories::paginate(10);
 
-        return view('dashboard.categories.index', compact('data'), [
-            "categories" => Categories::all(),
+        return view('dashboard.categories.index', compact('categories'), [
             "create" => route('categories.create'),
         ]);
     }
