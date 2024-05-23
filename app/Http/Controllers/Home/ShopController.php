@@ -8,6 +8,7 @@ use App\Models\Products;
 use App\Models\ProductImages;
 use App\Models\Categories;
 use App\Models\Brands;
+use App\Models\Sizes;
 
 class ShopController extends Controller
 {
@@ -33,10 +34,12 @@ class ShopController extends Controller
         }
 
         $images = ProductImages::where('product_id', $product->id)->get();
+        $size = Sizes::all();
+        $category = Categories::find($product->category_id);
 
         \Log::info('Product:', ['product' => $product]);
         \Log::info('Images:', ['images' => $images]);
 
-        return view('landing.shop.product', compact('product', 'images'));
+        return view('landing.shop.product', compact('product', 'images', 'size', 'category'));
     }
 }

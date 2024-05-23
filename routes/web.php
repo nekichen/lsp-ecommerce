@@ -30,10 +30,13 @@ use App\Http\Controllers\Home\ShopController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('shop', [ShopController::class, 'index']);
+    Route::get('shop', [ShopController::class, 'index'])->name('shop');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
     Route::get('cart', function () {
         return view('landing.shop.shopping-cart');
+    });
+    Route::get('carousel', function () {
+        return view('landing.carousel');
     });
 });
     

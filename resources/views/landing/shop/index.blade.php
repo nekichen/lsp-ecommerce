@@ -213,7 +213,8 @@
                                         <div class="product__item__pic set-bg"
                                             data-setbg="
                                             @php($productImages = $images->where('product_id', $item->id))
-                                            @if ($productImages->count() > 0) @foreach ($productImages as $image)
+                                            @if ($productImages->count() > 0) 
+                                            @foreach ($productImages as $image)
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
