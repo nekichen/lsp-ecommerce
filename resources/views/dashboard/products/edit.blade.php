@@ -38,7 +38,7 @@
                                 class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
                                 @if ($categories->isNotEmpty())
                                     @foreach ($categories as $category)
-                                        <option value="{{ old('category_id', $product->category_id) == $category->id }}"
+                                        <option value="{{ $category->id}}"
                                             @if (old('category_id', $product->category_id) == $category->id) selected @endif>
                                             {{ $category->name }}
                                         </option>
@@ -58,7 +58,7 @@
                                 class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
                                 @if ($brands->isNotEmpty())
                                     @foreach ($brands as $brand)
-                                        <option value="{{ old('brand_id', $product->brand_id) == $brand->id }}"
+                                        <option value="{{ $brand->id }}"
                                             @if (old('brand_id', $product->brand_id) == $brand->id) selected @endif>
                                             {{ $brand->name }}
                                         </option>

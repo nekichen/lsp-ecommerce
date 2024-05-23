@@ -36,10 +36,11 @@ class ShopController extends Controller
         $images = ProductImages::where('product_id', $product->id)->get();
         $size = Sizes::all();
         $category = Categories::find($product->category_id);
+        $brand = Brands::find($product->brand_id);
 
         \Log::info('Product:', ['product' => $product]);
         \Log::info('Images:', ['images' => $images]);
 
-        return view('landing.shop.product', compact('product', 'images', 'size', 'category'));
+        return view('landing.shop.product', compact('product', 'images', 'size', 'category', 'brand'));
     }
 }

@@ -70,7 +70,7 @@
                                 <ul>
                                     <li><span>SKU:</span> {{ $product->sku }}</li>
                                     <li><span>Categories:</span> {{ $category->name }}</li>
-                                    {{-- <li><span>Tag:</span> Clothes, Skin, Body</li> --}}
+                                    <li><span>Brand:</span> {{ $brand->name }}</li>
                                 </ul>
                             </div>
                         </div>
