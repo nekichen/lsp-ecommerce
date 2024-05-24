@@ -1,6 +1,6 @@
 <!-- Header Section Begin -->
 <header class="header">
-        <!-- <div class="header__top">
+    <!-- <div class="header__top">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
@@ -27,42 +27,57 @@
                 </div>
             </div>
         </div> -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__logo">
-                        <a href="{{ route('home')}}"><img src="{{ asset('assets/img/logo.png') }}" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li class="{{ request()->is('/') ? 'active' : ''}}"><a href="{{ route('home') }}">Home</a></li>
-                            <li class="{{ request()->is('shop') ? 'active' : ''}}"><a href="{{ route('shop') }}">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="#">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('assets/img/icon/cart.png') }}" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="header__logo">
+                    <a href="{{ route('home') }}"><img src="{{ asset('assets/img/logo.png') }}" alt=""></a>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+            <div class="col-lg-6 col-md-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="{{ request()->is('shop') ? 'active' : '' }}"><a href="{{ route('shop') }}">Shop</a>
+                        </li>
+                        <li><a href="#">Pages</a>
+                            <ul class="dropdown">
+                                <li><a href="./about.html">About Us</a></li>
+                                <li><a href="#">Shop Details</a></li>
+                                <li><a href="./shopping-cart.html">Shopping Cart</a></li>
+                                <li><a href="./checkout.html">Check Out</a></li>
+                                <li><a href="./blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="./blog.html">Blog</a></li>
+                        <li><a href="./contact.html">Contacts</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="header__nav__option">
+                    <a href="#" class="search-switch"><img src="{{ asset('assets/img/icon/search.png') }}"
+                            alt=""></a>
+                    <a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a>
+                    <a href="#"><img src="{{ asset('assets/img/icon/cart.png') }}" alt="">
+                        <span>0</span></a>
+                    <!-- resources/views/landing/layout/header.blade.php -->
+                    @if (Auth::check())
+                        <form action="{{ route('logout') }}" method="post" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="user link-button">
+                                {{ Auth::user()->name }}
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="user">
+                            Log in
+                        </a>
+                    @endif
+                </div>
+            </div>
         </div>
-    </header>
-    <!-- Header Section End -->
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Header Section End -->

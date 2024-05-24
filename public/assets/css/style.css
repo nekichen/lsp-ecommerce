@@ -540,6 +540,22 @@ input[type="radio"][name="size"] {
 	top: 3px;
 }
 
+.header__nav__option .user {
+	font-size: 18px;
+	color: #111111;
+	font-weight: 500;
+	display: inline-block;
+	position: relative;
+	top: 3px;
+}
+
+.header__nav__option .link-button {
+    background: none;
+    border: none;
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
 .offcanvas-menu-wrapper {
 	display: none;
 }

@@ -58,6 +58,26 @@
     @include('landing.layout.footer')
 
     @include('landing.layout.script')
+
+    @if (Session::has('success'))
+        <script>
+            Toast.fire({
+                timer: 3000,
+                icon: 'success',
+                title: '{{ session('success') }}',
+            })
+        </script>
+    @endif
+
+    @if (Session::has('error'))
+        <script>
+            Toast.fire({
+                timer: 3000,
+                icon: 'error',
+                title: '{{ session('error') }}',
+            })
+        </script>
+    @endif
 </body>
 
 </html>

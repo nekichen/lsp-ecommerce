@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CategoriesController;
@@ -29,17 +30,23 @@ use App\Http\Controllers\Home\ShopController;
 // Landing Page
 
 Route::prefix('/')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('register', [UserController::class, 'register'])->name('page');
+        Route::post('register', [UserController::class, 'registerPost'])->name('register');
+        Route::get('login', [UserController::class, 'login'])->name('login');
+        Route::post('login', [UserController::class, 'authenticate'])->name('authenticate');
+    });
+    Route::middleware('auth')->group(function () {
+        Route::post('logout', [UserController::class, 'logout'])->name('logout');
+    });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
-    Route::get('cart', function () {
-        return view('landing.shop.shopping-cart');
-    });
-    Route::get('carousel', function () {
-        return view('landing.carousel');
-    });
+    // Route::get('cart', function () {
+    //     return view('landing.shop.shopping-cart');
+    // });
 });
-    
+
 
 // Admin Panel
 
