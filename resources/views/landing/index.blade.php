@@ -1,3 +1,4 @@
+
 @extends('landing.layout.main')
 
 @section('content')

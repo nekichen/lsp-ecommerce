@@ -38,7 +38,7 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="{{ request()->is('shop') ? 'active' : '' }}"><a href="{{ route('shop') }}">Shop</a>
+                        <li class="{{ request()->is('shop') || request()->is('shop/*') ? 'active' : '' }}"><a href="{{ route('shop') }}">Shop</a>
                         </li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">

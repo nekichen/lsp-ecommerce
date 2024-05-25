@@ -41,6 +41,7 @@ Route::prefix('/')->group(function () {
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
+    Route::get('shop/category/{categorySlug}', [ShopController::class, 'index'])->name('shop.category');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
     // Route::get('cart', function () {
     //     return view('landing.shop.shopping-cart');

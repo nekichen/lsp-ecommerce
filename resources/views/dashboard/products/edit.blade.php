@@ -10,6 +10,20 @@
                 @method('PUT')
                 @csrf
                 <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                    <div class="mb-6">
+                        <label class="block text-sm">
+                            <span class="text-gray-700 dark:text-gray-400 font-semibold">Active</span>
+                            <select name="active" id="active"
+                                class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+                                <option value="no" {{ old('active', $product->active) == 'no' ? 'selected' : '' }}>No
+                                </option>
+                                <option value="yes" {{ old('active', $product->active) == 'yes' ? 'selected' : '' }}>Yes
+                                </option>
+                                <div class="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
+                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm"></span>
+                                </div>
+                            </select>
+                    </div>
                     {{-- <div class="mb-6">
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400 font-semibold">Image</span>
@@ -95,20 +109,6 @@
                             <span class="text-gray-700 dark:text-gray-400 font-semibold">Description</span>
                             <textarea name="description" id="description"
                                 class="block w-full h-32 mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">{{ old('description', $product->description) }}</textarea>
-                    </div>
-                    <div class="mb-6">
-                        <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400 font-semibold">Active</span>
-                            <select name="active" id="active"
-                                class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
-                                <option value="no" {{ old('active', $product->active) == 'no' ? 'selected' : '' }}>No
-                                </option>
-                                <option value="yes" {{ old('active', $product->active) == 'yes' ? 'selected' : '' }}>Yes
-                                </option>
-                                <div class="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm"></span>
-                                </div>
-                            </select>
                     </div>
                 </div>
                 <div class="px-4 py-3 mb-8">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brands;
+use Illuminate\Support\Str;
 
 class BrandsController extends Controller
 {
@@ -46,6 +47,7 @@ class BrandsController extends Controller
             'name' => 'required|unique:brands',
         ]);
 
+        $data['slug'] = Str::slug($request->name);
         Brands::create($data);
 
         return redirect()->route('brands.index')->with('message', 'Brand added successfully');
@@ -89,6 +91,7 @@ class BrandsController extends Controller
             'name' => 'required|unique:brands,name,' . $id,
         ]);
 
+        $brand->slug = Str::slug($request->name);
         $brand = Brands::find($id);
         $brand->update($request->all());
 

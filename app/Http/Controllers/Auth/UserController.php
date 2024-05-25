@@ -44,6 +44,8 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
+        $user = User::where('email', $request->email)->first();
+
         if ($credentials->passes()) {
             if (Auth::attempt([
                 'email' => $request->email, 
@@ -52,12 +54,16 @@ class UserController extends Controller
             {
                 return redirect()->route('home')->with('success', 'Welcome, ' . Auth::user()->name);
             } else {
-                return redirect()->route('login')->with('error', 'Email or Password is incorrect');
+                if (!$user) {
+                    return redirect()->route('page')->with('error', 'Please create an account first');       
+                } else {
+                    return redirect()->route('login')->with('error', 'Email or Password is incorrect');
+                }
             }
         } else {
-            return redirect()->route('login')->with('error', 'Error cuy');
-                // ->withErrors($credentials)
-                // ->withInput($request->only('email'));
+            return redirect()->route('login')
+                ->withErrors($credentials)
+                ->withInput($request->only('email'));
         }
     }
 

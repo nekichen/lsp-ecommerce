@@ -8,7 +8,7 @@
                     <div class="breadcrumb__text">
                         <h4>Shop</h4>
                         <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
+                            <a href="{{ route('home') }}">Home</a>
                             <span>Shop</span>
                         </div>
                     </div>
@@ -25,8 +25,9 @@
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
                         <div class="shop__sidebar__search">
-                            <form action="#">
-                                <input type="text" placeholder="Search...">
+                            <form action="{{ route('shop') }}" method="GET">
+                                <input type="text" placeholder="Search..." name="search"
+                                    value="{{ $request->get('search') }}">
                                 <button type="submit"><span class="icon_search"></span></button>
                             </form>
                         </div>
@@ -39,16 +40,21 @@
                                     <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="shop__sidebar__categories">
-                                                <ul class="nice-scroll">
-                                                    <li><a href="#">Men (20)</a></li>
-                                                    <li><a href="#">Women (20)</a></li>
-                                                    <li><a href="#">Bags (20)</a></li>
-                                                    <li><a href="#">Clothing (20)</a></li>
-                                                    <li><a href="#">Shoes (20)</a></li>
-                                                    <li><a href="#">Accessories (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
+                                                <ul>
+                                                    <li><a href="{{ route('shop') }}"
+                                                            class="{{ $categorySelected == null ? 'active' : '' }}">All</a>
+                                                    </li>
+                                                    @foreach ($categories as $item)
+                                                        <li>
+                                                            <a href="{{ route('shop.category', $categorySlug = $item->slug) }}"
+                                                                class="{{ $categorySelected == $item->id ? 'active' : '' }}">
+                                                                {{ $item->name }}
+                                                                @if ($item->products)
+                                                                    ({{ $item->products->where('active', 'yes')->count() }})
+                                                                @endif
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -62,35 +68,22 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    <li><a href="#">Louis Vuitton</a></li>
-                                                    <li><a href="#">Chanel</a></li>
-                                                    <li><a href="#">Hermes</a></li>
-                                                    <li><a href="#">Gucci</a></li>
+                                                    @foreach ($brands as $item)
+                                                        <li>
+                                                            <input {{ in_array($item->slug, $brandSlugs) ? 'checked' : '' }}
+                                                                type="checkbox" id="{{ $item->id }}" name="brand[]"
+                                                                value="{{ $item->slug }}" class="brand-select">
+                                                            <label class="brand-label" for="{{ $item->id }}">
+                                                                {{ $item->name }}
+                                                            </label>
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <ul>
-                                                    <li><a href="#">$0.00 - $50.00</a></li>
-                                                    <li><a href="#">$50.00 - $100.00</a></li>
-                                                    <li><a href="#">$100.00 - $150.00</a></li>
-                                                    <li><a href="#">$150.00 - $200.00</a></li>
-                                                    <li><a href="#">$200.00 - $250.00</a></li>
-                                                    <li><a href="#">250.00+</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
+                                {{-- <div class="card">
                                     <div class="card-heading">
                                         <a data-toggle="collapse" data-target="#collapseFour">Size</a>
                                     </div>
@@ -124,8 +117,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card">
+                                </div> --}}
+                                {{-- <div class="card">
                                     <div class="card-heading">
                                         <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
                                     </div>
@@ -180,7 +173,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -190,16 +183,22 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__left">
-                                    <p>Showing 1–12 of 126 results</p>
+                                    <p>Showing
+                                        @if ($products->count() > 0)
+                                            {{ $products->firstItem() }}–{{ $products->count() }}
+                                        @else
+                                            {{ $products->count() }}
+                                        @endif
+                                        of {{ $products->total() }} results
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__right">
                                     <p>Sort by Price:</p>
-                                    <select>
-                                        <option value="">Low To High</option>
-                                        <option value="">$0 - $55</option>
-                                        <option value="">$55 - $100</option>
+                                    <select id="sort" onchange="sortByPrice()">
+                                        <option value="low" {{ $sort == 'low' ? 'selected' : '' }}>Low to High</option>
+                                        <option value="high" {{ $sort == 'high' ? 'selected' : '' }}>High to Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -213,39 +212,30 @@
                                         <div class="product__item__pic set-bg"
                                             data-setbg="
                                             @php($productImages = $images->where('product_id', $item->id))
-                                            @if ($productImages->count() > 0) 
-                                            @foreach ($productImages as $image)
+                                            @if ($productImages->count() > 0) @foreach ($productImages as $image)
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
-                                            <li><a href="#"><img src="assets/img/icon/heart.png"
-                                                        alt=""></a></li>
-                                            <li><a href="{{ route('product', $item->slug) }}"><img
-                                                        src="assets/img/icon/search.png" alt=""></a></li>
+                                            <li><a href="#">
+                                                    <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
+                                                </a>
+                                            </li>
+                                            <li><a href="{{ route('product', $item->slug) }}">
+                                                    <img src="{{ asset('assets/img/icon/search.png') }}" alt="">
+                                                </a></li>
                                             </ul>
                                         </div>
                                         <div class="product__item__text">
                                             <h6>{{ $item->name }}</h6>
                                             <a href="#" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
-                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star"></i>
                                                 <i class="fa fa-star-o"></i>
                                                 <i class="fa fa-star-o"></i>
                                                 <i class="fa fa-star-o"></i>
                                                 <i class="fa fa-star-o"></i>
                                             </div>
                                             <h5>${{ $item->price }}</h5>
-                                            {{-- <div class="product__color__select">
-                                                <label for="pc-4">
-                                                    <input type="radio" id="pc-4">
-                                                </label>
-                                                <label class="active black" for="pc-5">
-                                                    <input type="radio" id="pc-5">
-                                                </label>
-                                                <label class="grey" for="pc-6">
-                                                    <input type="radio" id="pc-6">
-                                                </label>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -255,11 +245,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="product__pagination">
-                                <a class="active" href="">1</a>
-                                {{-- <a href="#">2</a>
-                                <a href="#">3</a>
-                                <span>...</span>
-                                <a href="#">21</a> --}}
+                                {{ $products->links() }}
                             </div>
                         </div>
                     </div>
@@ -268,4 +254,36 @@
         </div>
     </section>
     <!-- Shop Section End -->
+
+    <script>
+        function sortByPrice() {
+            var url = '{{ url()->current() }}';
+            var sortValue = document.getElementById('sort').value;
+
+            if (sortValue !== '1') {
+                url += '?sort=' + sortValue;
+            }
+
+            window.location.href = url;
+        }
+
+        $('.brand-select').change(function() {
+            filterByBrand();
+        });
+
+        function filterByBrand(brand) {
+            var brands = [];
+
+            $('.brand-select').each(function() {
+                if (this.checked == true) {
+                    brands.push(this.value);
+                }
+            });
+
+            console.log(brands.toString());
+
+            var url = '{{ url()->current() }}';
+            window.location.href = url + '?brand=' + brands.toString();
+        }
+    </script>
 @endsection
