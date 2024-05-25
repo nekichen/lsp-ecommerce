@@ -257,33 +257,40 @@
 
     <script>
         function sortByPrice() {
-            var url = '{{ url()->current() }}';
             var sortValue = document.getElementById('sort').value;
+            var url = new URL(window.location.href);
 
             if (sortValue !== '1') {
-                url += '?sort=' + sortValue;
+                url.searchParams.set('sort', sortValue);
+            } else {
+                url.searchParams.delete('sort');
             }
 
-            window.location.href = url;
+            window.location.href = url.toString();
         }
 
         $('.brand-select').change(function() {
             filterByBrand();
         });
 
-        function filterByBrand(brand) {
+        function filterByBrand() {
             var brands = [];
 
             $('.brand-select').each(function() {
-                if (this.checked == true) {
+                if (this.checked) {
                     brands.push(this.value);
                 }
             });
 
-            console.log(brands.toString());
+            var url = new URL(window.location.href);
 
-            var url = '{{ url()->current() }}';
-            window.location.href = url + '?brand=' + brands.toString();
+            if (brands.length > 0) {
+                url.searchParams.set('brand', brands.toString());
+            } else {
+                url.searchParams.delete('brand');
+            }
+
+            window.location.href = url.toString();
         }
     </script>
 @endsection
