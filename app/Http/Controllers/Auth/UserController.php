@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -33,8 +34,14 @@ class UserController extends Controller
         $data['password'] = bcrypt($data['password']);
         $data['role'] = 'user';
         $user = User::create($data);
+        
+        if ($user) {
+            return redirect()->route('login')->with('success', 'User created successfully, please login');
+        } else {
+            return back()->with('error', 'Something went wrong. Please try again.');
+        }
 
-        return redirect()->route('login')->with('success', 'User created successfully');
+        return back()->with('error', 'Something went wrong');
     }
 
     public function authenticate(Request $request)
@@ -52,7 +59,7 @@ class UserController extends Controller
                 'password' => $request->password],
                 $request->get('remember'))) 
             {
-                return redirect()->route('home')->with('success', 'Welcome, ' . Auth::user()->name);
+                return back()->with('success', 'Welcome, ' . Auth::user()->name);
             } else {
                 if (!$user) {
                     return redirect()->route('page')->with('error', 'Please create an account first');       
@@ -67,10 +74,9 @@ class UserController extends Controller
         }
     }
 
-
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->back();
     }
 }

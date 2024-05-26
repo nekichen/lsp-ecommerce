@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use App\Models\ProductImages;
 use App\Models\Categories;
 use App\Models\Brands;
@@ -37,5 +38,18 @@ class Products extends Model
     public function brand()
     {
         return $this->belongsTo(Brands::class, 'brand_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($product) {
+            // Delete associated images from storage
+            foreach ($product->images as $image) {
+                Storage::delete($image->path);
+                $image->delete();
+            }
+        });
     }
 }

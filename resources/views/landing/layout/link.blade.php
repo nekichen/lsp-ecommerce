@@ -12,3 +12,4 @@
 <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('assets/css/slicknav.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('assets/css/sweetalert2.min.css')}}" type="text/css">

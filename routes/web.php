@@ -15,6 +15,7 @@ use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ShopController;
+use App\Http\Controllers\Home\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,10 @@ Route::prefix('/')->group(function () {
     });
     Route::middleware('auth')->group(function () {
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
+        Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+        Route::post('profile/update', [ProfileController::class, 'update'])->name('update-profile');
+        Route::post('profile/change-password', [ProfileController::class, 'changePassword'])->name('change-password');
+        Route::post('profile/delete', [ProfileController::class, 'destroy'])->name('delete-account');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');

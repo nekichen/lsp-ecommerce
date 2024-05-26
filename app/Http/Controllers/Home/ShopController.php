@@ -52,7 +52,6 @@ class ShopController extends Controller
             }
         }
 
-
         // dd('Category Slug:', $categorySlug, 'Category Selected:', $categorySelected);
 
         $products = $query->orderBy('id', 'DESC')->where('active', 'yes')->paginate(9);
@@ -78,9 +77,14 @@ class ShopController extends Controller
         $category = Categories::find($product->category_id);
         $brand = Brands::find($product->brand_id);
 
-        \Log::info('Product:', ['product' => $product]);
-        \Log::info('Images:', ['images' => $images]);
+        $relatedProducts = Products::where('id', '!=', $product->id)
+            ->where('active', 'yes')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        return view('landing.shop.product', compact('product', 'images', 'size', 'category', 'brand'));
+        // Get all related images
+        $relatedImages = ProductImages::whereIn('product_id', $relatedProducts->pluck('id'))->get();
+
+        return view('landing.shop.product', compact('relatedProducts', 'relatedImages', 'product', 'images', 'size', 'category', 'brand'));
     }
 }

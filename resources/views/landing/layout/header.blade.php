@@ -38,9 +38,10 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="{{ request()->is('shop') || request()->is('shop/*') ? 'active' : '' }}"><a href="{{ route('shop') }}">Shop</a>
+                        <li class="{{ request()->is('shop') || request()->is('shop/*') ? 'active' : '' }}"><a
+                                href="{{ route('shop') }}">Shop</a>
                         </li>
-                        <li><a href="#">Pages</a>
+                        {{-- <li><a href="#">Pages</a>
                             <ul class="dropdown">
                                 <li><a href="./about.html">About Us</a></li>
                                 <li><a href="#">Shop Details</a></li>
@@ -50,7 +51,7 @@
                             </ul>
                         </li>
                         <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./contact.html">Contacts</a></li>
+                        <li><a href="./contact.html">Contacts</a></li> --}}
                     </ul>
                 </nav>
             </div>
@@ -63,12 +64,9 @@
                         <span>0</span></a>
                     <!-- resources/views/landing/layout/header.blade.php -->
                     @if (Auth::check())
-                        <form action="{{ route('logout') }}" method="post" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="user link-button">
-                                {{ Auth::user()->name }}
-                            </button>
-                        </form>
+                        <a href="#" onclick="$('#userProfileModal').modal('show'); return false;"><img
+                                src="{{ asset('assets/img/icon/user.png') }}" alt=""></a>
+                        @include('landing.auth.user')
                     @else
                         <a href="{{ route('login') }}" class="user">
                             Log in
