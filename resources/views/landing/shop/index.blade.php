@@ -25,7 +25,13 @@
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
                         <div class="shop__sidebar__search">
-                            <form action="{{ route('shop') }}" method="GET">
+                            <form action="{{ url()->current() }}" method="GET">
+                                @if (request()->get('brand'))
+                                    <input type="hidden" name="brand" value="{{ request()->get('brand') }}">
+                                @endif
+                                @if (request()->get('sort'))
+                                    <input type="hidden" name="sort" value="{{ request()->get('sort') }}">
+                                @endif
                                 <input type="text" placeholder="Search..." name="search"
                                     value="{{ $request->get('search') }}">
                                 <button type="submit"><span class="icon_search"></span></button>
@@ -70,7 +76,8 @@
                                                 <ul>
                                                     @foreach ($brands as $item)
                                                         <li>
-                                                            <input {{ in_array($item->slug, $brandSlugs) ? 'checked' : '' }}
+                                                            <input
+                                                                {{ in_array($item->slug, $brandSlugs) ? 'checked' : '' }}
                                                                 type="checkbox" id="{{ $item->id }}" name="brand[]"
                                                                 value="{{ $item->slug }}" class="brand-select">
                                                             <label class="brand-label" for="{{ $item->id }}">

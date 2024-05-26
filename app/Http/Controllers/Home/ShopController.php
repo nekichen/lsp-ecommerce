@@ -23,8 +23,12 @@ class ShopController extends Controller
         $brands = Brands::all();
         $query = Products::query();
 
-        if($request->get('search')) {
-            $query->where('products.name', 'like', '%' . $request->get('search') . '%')->orWhere('products.description', 'like', '%' . $request->get('search') . '%');
+        // Handle search query
+        if ($request->get('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('products.name', 'like', '%' . $request->get('search') . '%')
+                ->orWhere('products.description', 'like', '%' . $request->get('search') . '%');
+            });
         }
 
         if ($request->get('sort')) {
