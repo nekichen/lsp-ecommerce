@@ -16,6 +16,8 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ShopController;
 use App\Http\Controllers\Home\ProfileController;
+use App\Http\Controllers\Home\CartController;
+use App\Http\Controllers\Home\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,19 +40,26 @@ Route::prefix('/')->group(function () {
         Route::post('login', [UserController::class, 'authenticate'])->name('authenticate');
     });
     Route::middleware('auth')->group(function () {
+        // ACCOUNT
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('profile', [ProfileController::class, 'index'])->name('profile');
         Route::post('profile/update', [ProfileController::class, 'update'])->name('update-profile');
         Route::post('profile/change-password', [ProfileController::class, 'changePassword'])->name('change-password');
         Route::post('profile/delete', [ProfileController::class, 'destroy'])->name('delete-account');
+
+        // CART
+        Route::get('cart', [CartController::class, 'index'])->name('cart');
+        Route::post('cart/store', [CartController::class, 'addToCart'])->name('add-to-cart');
+        Route::put('cart/update', [CartController::class, 'updateCart'])->name('update-cart');
+        Route::delete('cart/remove', [CartController::class, 'removeItem'])->name('remove-item');
+        Route::delete('cart/clear', [CartController::class, 'clearCart'])->name('clear-cart');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
     Route::get('shop/category/{categorySlug}', [ShopController::class, 'index'])->name('shop.category');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
-    // Route::get('cart', function () {
-    //     return view('landing.shop.shopping-cart');
-    // });
+
+    Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
 });
 
 

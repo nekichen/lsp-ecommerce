@@ -7,7 +7,7 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>호랑이</title>
+    <title>HOSHI-ON!</title>
 
     @include('landing.layout.link')
     <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>

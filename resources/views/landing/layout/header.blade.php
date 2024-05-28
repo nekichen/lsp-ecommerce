@@ -60,8 +60,11 @@
                     <a href="#" class="search-switch"><img src="{{ asset('assets/img/icon/search.png') }}"
                             alt=""></a>
                     <a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a>
-                    <a href="#"><img src="{{ asset('assets/img/icon/cart.png') }}" alt="">
-                        <span>0</span></a>
+                    <a href="{{ route('cart') }}"><img src="{{ asset('assets/img/icon/cart.png') }}" alt="">
+                        @if (Auth::check())
+                            <span>{{ Cart::instance('cart_' . Auth::user()->id)->content()->count() }}</span>
+                        @endif
+                    </a>
                     <!-- resources/views/landing/layout/header.blade.php -->
                     @if (Auth::check())
                         <a href="#" onclick="$('#userProfileModal').modal('show'); return false;"><img

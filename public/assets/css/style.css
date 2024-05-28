@@ -141,6 +141,11 @@ input[type="radio"][name="size"] {
 	background-position: top center;
 }
 
+img.cart-img {
+	width: 80px;
+	display: flex;
+}
+
 .spad {
 	padding-top: 70px;
 	padding-bottom: 100px;
@@ -2474,7 +2479,7 @@ input[type="radio"][name="size"] {
 	width: 140px;
 }
 
-.shopping__cart__table table tbody tr td.cart__close i {
+.shopping__cart__table table tbody tr td.cart__close a i {
 	font-size: 18px;
 	color: #111111;
 	height: 40px;
@@ -2489,17 +2494,27 @@ input[type="radio"][name="size"] {
 	text-align: right;
 }
 
-.continue__btn.update__btn a {
+.continue__btn.update__btn button {
 	color: #ffffff;
 	background: #111111;
 	border-color: #111111;
 }
 
-.continue__btn.update__btn a i {
+.continue__btn.update__btn button i {
 	margin-right: 5px;
 }
 
 .continue__btn a {
+	color: #111111;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	border: 1px solid #e1e1e1;
+	padding: 14px 35px;
+	display: inline-block;
+}
+.continue__btn button {
 	color: #111111;
 	font-size: 14px;
 	font-weight: 700;

@@ -58,7 +58,20 @@
                                         <input type="text" value="1">
                                     </div>
                                 </div>
-                                <a href="#" class="primary-btn">add to cart</a>
+                                @if (isset($product))
+                                    <button class="primary-btn"
+                                        onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()">add
+                                        to cart</button>
+                                    <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
+                                        @csrf
+                                        @if (isset($product->id))
+                                            <input type="hidden" name="id" value="{{ $product->id }}">
+                                        @endif
+                                        <input type="hidden" name="quantity" value="1">
+                                    </form>
+                                @else
+                                    <p>Product not found.</p>
+                                @endif
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>

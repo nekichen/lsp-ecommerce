@@ -76,6 +76,8 @@ class ShopController extends Controller
             abort(404, 'Product not found');
         }
 
+        // dd($product->id);
+
         $images = ProductImages::where('product_id', $product->id)->get();
         $size = Sizes::all();
         $category = Categories::find($product->category_id);
