@@ -92,6 +92,11 @@ class SizesController extends Controller
         ]);
 
         $size = Sizes::find($id);
+        if (!$size) {
+            return redirect()->route('sizes.index')->with('error', 'Size not found');
+        }
+
+        $size = Sizes::find($id);
         $size->update($request->all());
 
         return redirect()->route('sizes.index')->with('message', 'Size updated successfully');

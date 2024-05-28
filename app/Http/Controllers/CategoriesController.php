@@ -92,6 +92,11 @@ class CategoriesController extends Controller
         ]);
 
         $category = Categories::find($id);
+        if (!$category) {
+            return redirect()->route('categories.index')->with('error', 'Category not found');
+        }
+
+        $category = Categories::find($id);
         $category->slug = Str::slug($request->name);
         $category->update($request->all());
 

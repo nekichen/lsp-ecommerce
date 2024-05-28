@@ -47,7 +47,7 @@
                                     @foreach ($size as $item)
                                         <label for="{{ $item->name }}">{{ $item->code }}</label>
                                         <input type="radio" id="{{ $item->name }}" name="size"
-                                            value="{{ $item->code }}">
+                                            value="{{ $item->code }}" required>
                                         </label>
                                     @endforeach
                                 </div>
@@ -55,35 +55,42 @@
                             <div class="product__details__cart__option">
                                 <div class="quantity">
                                     <div class="pro-qty">
-                                        <input type="text" value="1">
+                                        <input type="text" value="1" id="qty">
                                     </div>
                                 </div>
                                 @if (isset($product))
                                     <button class="primary-btn"
-                                        onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()">add
+                                        onclick="addToCart()">add
                                         to cart</button>
                                     <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
                                         @csrf
                                         @if (isset($product->id))
                                             <input type="hidden" name="id" value="{{ $product->id }}">
                                         @endif
-                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="quantity" id="hidden-qty">
+                                        <input type="hidden" name="size" id="selected-size" value="">
                                     </form>
                                 @else
                                     <p>Product not found.</p>
                                 @endif
                             </div>
                             <div class="product__details__btns__option">
-                                <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                                @if (isset($product))
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('wishlist-add-{{ $product->id }}').submit()">
+                                        <i class="fa fa-heart"></i> add to wishlist
+                                    </a>
+                                    <form action="{{ route('wishlist-add') }}" id="wishlist-add-{{ $product->id }}"
+                                        method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $product->id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                    </form>
+                                @else
+                                    <p>Product not found.</p>
+                                @endif
                             </div>
                             <div class="product__details__last__option">
-                                {{-- <h5><span>Additional Information</span></h5> --}}
-                                {{-- <img src="{{ asset('assets/img/shop-details/details-payment.png') }}" alt=""> --}}
-                                {{-- <ul>
-                                    <li><span>SKU:</span> {{ $product->sku }}</li>
-                                    <li><span>Categories:</span> {{ $category->name }}</li>
-                                    <li><span>Brand:</span> {{ $brand->name }}</li>
-                                </ul> --}}
                             </div>
                         </div>
                     </div>
@@ -231,5 +238,29 @@
                 e.preventDefault();
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sizeInputs = document.querySelectorAll('input[name="size"]');
+            const selectedSizeInput = document.getElementById('selected-size');
+
+            sizeInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    selectedSizeInput.value = this.value;
+                });
+            });
+
+            // Set the default size if one is selected by default
+            const defaultSize = document.querySelector('input[name="size"]:checked');
+            if (defaultSize) {
+                selectedSizeInput.value = defaultSize.value;
+            }
+        });
+
+        function addToCart() {
+            const qtyInput = document.getElementById('qty');
+            const hiddenQtyInput = document.getElementById('hidden-qty');
+            hiddenQtyInput.value = qtyInput.value; // Update hidden input value
+            document.getElementById('add-to-cart').submit(); // Submit the form
+        }
     </script>
 @endsection

@@ -6,10 +6,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__text">
-                        <h4>Shop</h4>
+                        <h4>Wishlist</h4>
                         <div class="breadcrumb__links">
                             <a href="{{ route('home') }}">Home</a>
-                            <span>Shop</span>
+                            <span>Wishlist</span>
                         </div>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
     <section class="shop spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                {{-- <div class="col-lg-3">
                     <div class="shop__sidebar">
                         <div class="shop__sidebar__search">
                             <form action="{{ url()->current() }}" method="GET">
@@ -120,18 +120,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        @foreach ($products as $item)
-                            @if ($item->active == 'yes')
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg"
-                                            data-setbg="
-                                            @php($productImages = $images->where('product_id', $item->id))
-                                            @if ($productImages->count() > 0) @foreach ($productImages as $image)
-                                                        {{ asset('storage/' . $image->image) }}"
-                                                    @endforeach @endif>
-                                            <ul class="product__hover">
+                    <div class="row"> --}}
+                        @foreach ($wishlistItems as $item)
+                            {{-- @if ($item->active == 'yes') --}}
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="
+                                        @if (isset($images[$item->id])) {{ asset('storage/' . $images[$item->id]->image) }} @endif">
+                                        <ul class="product__hover">
                                             @if (isset($item))
                                                 <li><a href="#"
                                                         onclick="event.preventDefault(); document.getElementById('wishlist-add').submit()">
@@ -148,55 +145,55 @@
                                                     </form>
                                                 </li>
                                             @endif
-                                            <li><a href="{{ route('product', $item->slug) }}">
+                                            <li><a href="{{ route('product', $product->slug) }}">
                                                     <img src="{{ asset('assets/img/icon/search.png') }}" alt="">
                                                 </a></li>
-                                            </ul>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>{{ $item->name }}</h6>
+                                        @if (isset($item))
+                                            <a href="#"
+                                                onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
+                                                class="add-cart">
+                                                + Add To Cart
+                                            </a>
+                                            <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
+                                                @csrf
+                                                @if (isset($item->id))
+                                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                                @endif
+                                                <input type="hidden" name="quantity" value="1">
+                                            </form>
+                                        @endif
+                                        <div class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
                                         </div>
-                                        <div class="product__item__text">
-                                            <h6>{{ $item->name }}</h6>
-                                            @if (isset($item))
-                                                <a href="#"
-                                                    onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
-                                                    class="add-cart">
-                                                    + Add To Cart
-                                                </a>
-                                                <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
-                                                    @csrf
-                                                    @if (isset($item->id))
-                                                        <input type="hidden" name="id" value="{{ $item->id }}">
-                                                    @endif
-                                                    <input type="hidden" name="quantity" value="1">
-                                                </form>
-                                            @endif
-                                            <div class="rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                            <h5>${{ $item->price }}</h5>
-                                        </div>
+                                        <h5>${{ $item->price }}</h5>
                                     </div>
                                 </div>
-                            @endif
+                            </div>
+                            {{-- @endif --}}
                         @endforeach
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-lg-12">
                             <div class="product__pagination">
-                                {{ $products->links() }}
+                                {{ $wishlistItems->links() }}
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
     </section>
     <!-- Shop Section End -->
 
-    <script>
+    {{-- <script>
         function sortByPrice() {
             var sortValue = document.getElementById('sort').value;
             var url = new URL(window.location.href);
@@ -233,5 +230,5 @@
 
             window.location.href = url.toString();
         }
-    </script>
+    </script> --}}
 @endsection

@@ -8,7 +8,7 @@ use Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Products;
 use App\Models\ProductImages;
-use App\Models\User;
+use App\Models\Sizes;
 
 class CartController extends Controller
 {
@@ -38,16 +38,25 @@ class CartController extends Controller
         if (Auth::check()) {
             $product = Products::find($request->id);
             $user = Auth::user();
+
+            // Check if size exists in sizes table
+            $size = Sizes::where('code', $request->size)->first();
+            if (!$size) {
+                return redirect()->back()->with('error', 'Please choose a valid size');
+            }
             
             Cart::instance('cart_' . $user->id)->add(
                 $product->id,
                 $product->name,
                 $request->quantity,
                 $product->price,
-                ['user_id' => $user->id]
+                [
+                    'user_id' => $user->id,
+                    'size' => $size->code // Add size to item options
+                ]
             )->associate('App\Models\Products');
 
-            return redirect()->back();
+            return redirect()->back()->with('message', 'Product added to cart');
         } else {
             return redirect()->route('login')->with('error', 'Please login first');
         }

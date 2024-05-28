@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\SizesController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\DiscountsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\PaymentsController;
@@ -53,13 +54,16 @@ Route::prefix('/')->group(function () {
         Route::put('cart/update', [CartController::class, 'updateCart'])->name('update-cart');
         Route::delete('cart/remove', [CartController::class, 'removeItem'])->name('remove-item');
         Route::delete('cart/clear', [CartController::class, 'clearCart'])->name('clear-cart');
+
+        // WISHLIST
+        Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist');
+        Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
     Route::get('shop/category/{categorySlug}', [ShopController::class, 'index'])->name('shop.category');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
 
-    Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
 });
 
 
@@ -81,6 +85,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('brands', BrandsController::class);
         Route::resource('sizes', SizesController::class);
         Route::resource('products', ProductsController::class);
+        Route::resource('discounts', DiscountsController::class);
         Route::resource('payments', PaymentsController::class);
         Route::resource('orders', OrdersController::class);
         Route::resource('customers', CustomersController::class);

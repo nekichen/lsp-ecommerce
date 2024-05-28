@@ -17,9 +17,6 @@ class CreateDiscountProductsTable extends Migration
             $table->id();
             $table->foreignId('discount_id')->references('id')->on('discounts')->onDelete('cascade');
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->integer('percentage');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
             $table->timestamps();
         });
     }

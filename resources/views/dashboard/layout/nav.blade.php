@@ -1,6 +1,6 @@
 <div class="py-4 text-gray-500 dark:text-gray-400">
-    <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-        Admin Panel
+    <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-200" href="{{ route('dashboard') }}">
+        HOSHI-ON!
     </a>
     <ul class="mt-6">
         {{-- Dashboard --}}
@@ -94,6 +94,26 @@
                 <span class="ml-4">Products</span>
             </a>
         </li>
+        {{-- DISCOUNTS --}}
+        <li class="relative px-6 py-3">
+            @if (request()->routeIs('discounts.*'))
+                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
+                    aria-hidden="true"></span>
+            @endif
+            <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('discounts.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
+                href="{{ route('discounts.index') }}">
+                <!-- https://feathericons.dev/?search=clipboard&iconset=feather -->
+                <!-- https://feathericons.dev/?search=percent&iconset=feather -->
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor"
+                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <line x1="19" x2="5" y1="5" y2="19" />
+                    <circle cx="6.5" cy="6.5" r="2.5" />
+                    <circle cx="17.5" cy="17.5" r="2.5" />
+                </svg>
+                
+                <span class="ml-4">Discounts</span>
+            </a>
+        </li>
         {{-- ORDERS --}}
         <li class="relative px-6 py-3">
             @if (request()->routeIs('orders.*'))
@@ -120,9 +140,9 @@
             <a href="{{ route('payments.index') }}"
                 class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('payments.*') ? 'text-gray-800 dark:text-gray-100' : '' }}">
                 <!-- https://feathericons.dev/?search=dollar-sign&iconset=feather -->
-                <svg class="w-5 h-5" viewBox="0 0 24 24" width="24" height="24"
-                    class="main-grid-item-icon" fill="none" stroke="currentColor" stroke-linecap="round"
-                    stroke-linejoin="round" stroke-width="2">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" width="24" height="24" class="main-grid-item-icon"
+                    fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2">
                     <line x1="12" x2="12" y1="1" y2="23" />
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>

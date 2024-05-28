@@ -49,7 +49,9 @@
                                                         </a>
                                                     </div>
                                                     <div class="product__cart__item__text">
-                                                        <h6>{{ $item->model->name }}</h6>
+                                                        <a href="{{ route('product', $item->model->slug) }}">
+                                                            <h6>{{ $item->model->name }} ({{ $item->options->size }})</h6>
+                                                        </a>
                                                         <h5>${{ $item->price }}</h5>
                                                     </div>
                                                 </td>
@@ -57,7 +59,8 @@
                                                     <div class="quantity">
                                                         <div class="pro-qty-2">
                                                             <input type="text" data-rowid="{{ $item->rowId }}"
-                                                                value="{{ $item->qty }}" onchange="updateQuantity(this)">
+                                                                value="{{ $item->qty }}"
+                                                                onchange="updateQuantity(this)">
                                                         </div>
                                                     </div>
                                                 </td>
@@ -97,9 +100,10 @@
                         <div class="cart__total">
                             <h6>Cart total</h6>
                             <ul>
-                                <li>Subtotal <span>${{ Cart::instance('cart')->subtotal() }}</span></li>
-                                <li>Tax <span>${{ Cart::instance('cart')->tax() }}</span></li>
-                                <li>Total <span>${{ Cart::instance('cart')->total() }}</span></li>
+                                <li>Subtotal <span>${{ Cart::instance('cart_' . Auth::user()->id)->subtotal() }}</span>
+                                </li>
+                                <li>Tax <span>${{ Cart::instance('cart_' . Auth::user()->id)->tax() }}</span></li>
+                                <li>Total <span>${{ Cart::instance('cart_' . Auth::user()->id)->total() }}</span></li>
                             </ul>
                             <a href="#" class="primary-btn">Proceed to checkout</a>
                         </div>
@@ -137,8 +141,12 @@
 
     <script>
         function updateQuantity(qty) {
-            $('#rowId').val($(qty).data('rowid'));
-            $('#quantity').val($(qty).val());
+            var rowId = $(qty).data('rowid');
+            var quantity = $(qty).val();
+
+            $('#rowId').val(rowId);
+            $('#quantity').val(quantity);
+
             $('#update-cart').submit();
         }
 

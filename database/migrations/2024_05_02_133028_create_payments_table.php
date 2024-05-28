@@ -20,7 +20,7 @@ class CreatePaymentsTable extends Migration
             $table->float('amount');
             $table->datetime('payment_date');
             $table->string('payment_method');
-            $table->enum('payment_status', ['pending', 'paid', 'cancelled'])->default('pending');
+            $table->enum('payment_status', ['not paid', 'paid', 'cancelled'])->default('not paid');
             $table->timestamps();
         });
     }

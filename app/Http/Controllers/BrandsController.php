@@ -91,6 +91,11 @@ class BrandsController extends Controller
             'name' => 'required|unique:brands,name,' . $id,
         ]);
 
+        $brand = Brands::find($id);
+        if (!$brand) {
+            return redirect()->route('brands.index')->with('error', 'Brand not found');
+        }
+
         $brand->slug = Str::slug($request->name);
         $brand = Brands::find($id);
         $brand->update($request->all());

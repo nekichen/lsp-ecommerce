@@ -27,7 +27,7 @@ class Products extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImages::class);
+        return $this->hasMany(ProductImages::class,'product_id');
     }
 
     public function category()
@@ -45,9 +45,11 @@ class Products extends Model
         parent::boot();
 
         static::deleting(function ($product) {
-            // Delete associated images from storage
             foreach ($product->images as $image) {
-                Storage::delete($image->path);
+                // Logging untuk debugging
+                \Log::info('Deleting associated image from storage: ' . $image->image);
+                // Menghapus gambar dari storage
+                Storage::delete($image->image);
                 $image->delete();
             }
         });

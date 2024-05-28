@@ -160,10 +160,12 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $data = Products::where('id', $id)->delete();
-        $data = ProductImages::where('product_id', $id)->delete();
-
-        return back()->with('message', 'Product deleted successfully');
+        $product = Products::find($id);
+        if ($product) {
+            $product->delete();
+            return back()->with('message', 'Product and associated images deleted successfully');
+        }
+        return back()->with('error', 'Product not found');
     }
+
 }

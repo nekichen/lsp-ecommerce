@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Products;
 
 class ProductImages extends Model
 {
@@ -15,6 +17,18 @@ class ProductImages extends Model
 
     public function product()
     {
-        return $this->belongsTo(Products::class, 'product_id');
+        return $this->belongsTo(Products::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($image) {
+            // Logging untuk debugging
+            \Log::info('Deleting image from storage: ' . $image->image);
+            // Menghapus gambar dari storage
+            Storage::delete($image->image);
+        });
     }
 }
