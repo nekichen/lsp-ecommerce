@@ -15,7 +15,7 @@ class HomeController extends Controller
     public function index(){
 
         $products = Products::orderBy('id','desc')->limit(8)->get();
-        $images = ProductImages::all();
+        $images = ProductImages::all(); 
 
         return view('landing.index', compact('products', 'images'));
     }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;;
+use Cart;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Products;
 use App\Models\ProductImages;
 use App\Models\Categories;
@@ -61,7 +64,11 @@ class ShopController extends Controller
         $products = $query->orderBy('id', 'DESC')->where('active', 'yes')->paginate(9);
         $images = ProductImages::all();
 
-        return view('landing.shop.index', compact('products', 'images', 'brands', 'categories', 'categorySelected', 'brandSlugs', 'sort', 'request'));
+        $user = Auth::user();
+        $wishlistItems = $user ? Cart::instance('wishlist_' . $user->id)->content() : collect([]);
+        $productInWishlist = $wishlistItems->pluck('id')->toArray();
+
+        return view('landing.shop.index', compact('products', 'images', 'brands', 'categories', 'categorySelected', 'brandSlugs', 'sort', 'request', 'productInWishlist', 'wishlistItems'));
     }
 
     public function product($slug)
@@ -91,6 +98,8 @@ class ShopController extends Controller
         // Get all related images
         $relatedImages = ProductImages::whereIn('product_id', $relatedProducts->pluck('id'))->get();
 
-        return view('landing.shop.product', compact('relatedProducts', 'relatedImages', 'product', 'images', 'size', 'category', 'brand'));
+        $productInWishlist = Cart::instance('wishlist_' . Auth::user()->id)->content()->pluck('id')->contains($product->id);
+
+        return view('landing.shop.product', compact('relatedProducts', 'relatedImages', 'product', 'images', 'size', 'category', 'brand', 'productInWishlist'));
     }
 }

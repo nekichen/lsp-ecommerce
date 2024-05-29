@@ -15,8 +15,14 @@ class CreateDiscountsTable extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('percentage');
+            $table->string('code');
+            $table->string('name')->nullable();
+            $table->integer('max_use')->nullable();
+            $table->integer('max_user')->nullable();
+            $table->enum('type', ['percentage', 'fixed'])->default('percentage');
+            $table->double('amount', 10, 2);
+            $table->double('min_amount', 10, 2)->nullable();
+            $table->boolean('is_active')->default(true);
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->timestamps();

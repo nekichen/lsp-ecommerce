@@ -58,6 +58,7 @@ Route::prefix('/')->group(function () {
         // WISHLIST
         Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist');
         Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
+        Route::delete('wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist-remove');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');

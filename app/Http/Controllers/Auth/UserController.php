@@ -61,11 +61,7 @@ class UserController extends Controller
             {
                 return back()->with('success', 'Welcome, ' . Auth::user()->name);
             } else {
-                if (!$user) {
-                    return redirect()->route('page')->with('error', 'Please create an account first');       
-                } else {
-                    return redirect()->route('login')->with('error', 'Email or Password is incorrect');
-                }
+                return redirect()->route('login')->with('error', 'Email or Password is incorrect');
             }
         } else {
             return redirect()->route('login')

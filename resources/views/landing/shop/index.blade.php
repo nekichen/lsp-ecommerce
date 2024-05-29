@@ -132,20 +132,22 @@
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
-                                            @if (isset($item))
+                                            @if (!empty($wishlistItem))
                                                 <li><a href="#"
-                                                        onclick="event.preventDefault(); document.getElementById('wishlist-add').submit()">
-                                                        <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
+                                                        onclick="removeFromWishlist('{{ $wishlistItem->rowId }}')">
+                                                        <img src="{{ asset('assets/img/icon/heart-red.png') }}"
+                                                            alt="">
                                                     </a>
-                                                    <form action="{{ route('wishlist-add') }}" id="wishlist-add"
-                                                        method="POST">
-                                                        @csrf
-                                                        @if (isset($item->id))
-                                                            <input type="hidden" name="id"
-                                                                value="{{ $item->id }}">
-                                                        @endif
-                                                        <input type="hidden" name="quantity" value="1">
-                                                    </form>
+                                                    <input type="hidden" name="id" value="{{ $item->id }}"
+                                                        data-rowid="{{ $wishlistItem->rowId }}">
+                                                </li>
+                                            @else
+                                                <li><a href="#" onclick="removeFromWishlist('{{ $item->id }}')">
+                                                        <img src="{{ asset('assets/img/icon/heart-red.png') }}"
+                                                            alt="">
+                                                    </a>
+                                                    <input type="hidden" name="id" value="{{ $item->id }}"
+                                                        data-rowid="">
                                                 </li>
                                             @endif
                                             <li><a href="{{ route('product', $item->slug) }}">
@@ -155,20 +157,16 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>{{ $item->name }}</h6>
-                                            @if (isset($item))
-                                                <a href="#"
-                                                    onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
-                                                    class="add-cart">
-                                                    + Add To Cart
-                                                </a>
-                                                <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
-                                                    @csrf
-                                                    @if (isset($item->id))
-                                                        <input type="hidden" name="id" value="{{ $item->id }}">
-                                                    @endif
-                                                    <input type="hidden" name="quantity" value="1">
-                                                </form>
-                                            @endif
+                                            <a href="#"
+                                                onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
+                                                class="add-cart">
+                                                + Add To Cart
+                                            </a>
+                                            <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $item->id }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                            </form>
                                             <div class="rating">
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star-o"></i>
@@ -195,6 +193,12 @@
         </div>
     </section>
     <!-- Shop Section End -->
+
+    <form action="{{ route('wishlist-remove') }}" id="wishlist-remove" method="POST">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="rowId" id="rowId">
+    </form>
 
     <script>
         function sortByPrice() {
@@ -232,6 +236,11 @@
             }
 
             window.location.href = url.toString();
+        }
+
+        function removeFromWishlist(rowId) {
+            $('#rowId').val(rowId);
+            $('#wishlist-remove').submit();
         }
     </script>
 @endsection

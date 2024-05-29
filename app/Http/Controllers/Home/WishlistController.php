@@ -14,22 +14,24 @@ class WishlistController extends Controller
     //
     public function index()
     {
-        $user = Auth::user();
-        $wishlistItems = Cart::instance('wishlist_' . Auth::user()->id)->content();
-        $images = [];
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
 
-        if(Auth::check('user_id' == Auth::user()->id)){
-            foreach ($wishlistItems as $item) {
-                $product = Products::find($item->id);
+        $user = Auth::user();
+        $wishlistItems = Cart::instance('wishlist_' . $user->id)->content();
+        $images = [];
+        $products = [];
+
+        foreach ($wishlistItems as $item) {
+            $product = Products::find($item->id);
+            if ($product) {
+                $products[] = $product;
                 $images[$item->id] = ProductImages::where('product_id', $item->id)->first();
             }
         }
 
-        if (Auth::check()) {
-            return view('landing.shop.wishlist', compact('wishlistItems', 'images', 'product'));
-        } else {
-            return redirect()->route('login');
-        }
+        return view('landing.shop.wishlist', compact('wishlistItems', 'images', 'products'));
     }
 
     public function addToWishlist(Request $request)
@@ -46,6 +48,17 @@ class WishlistController extends Controller
                 ['user_id' => $user->id]
             )->associate('App\Models\Products');
 
+            return redirect()->back();
+        } else {
+            return redirect()->route('login')->with('error', 'Please login first');
+        }
+    }
+
+    public function removeFromWishlist(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            Cart::instance('wishlist_' . $user->id)->remove($request->rowId);
             return redirect()->back();
         } else {
             return redirect()->route('login')->with('error', 'Please login first');

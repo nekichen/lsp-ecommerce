@@ -57,8 +57,8 @@
             </div>
             <div class="col-lg-3 col-md-3">
                 <div class="header__nav__option">
-                    <a href="#" class="search-switch"><img src="{{ asset('assets/img/icon/search.png') }}"
-                            alt=""></a>
+                    {{-- <a href="#" class="search-switch"><img src="{{ asset('assets/img/icon/search.png') }}"
+                            alt=""></a> --}}
                     <a href="{{ route('wishlist') }}"><img src="{{ asset('assets/img/icon/heart.png') }}"
                             alt="">
                     </a>

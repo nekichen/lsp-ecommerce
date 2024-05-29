@@ -9,6 +9,15 @@ class Discounts extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'code',
         'name',
+        'max_use',
+        'max_user',
+        'type',
+        'amount',
+        'min_amount',
+        'is_active',
+        'start_date',
+        'end_date',
     ];
 }

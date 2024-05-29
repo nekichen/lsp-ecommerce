@@ -4,6 +4,7 @@
 @section('page', 'Discounts')
 @section('link', $create)
 @section('content')
+
     <div class="w-full overflow-hidden rounded-lg shadow-xs">
         <div class="w-full overflow-x-auto">
             <table class="w-full whitespace-no-wrap">
@@ -11,38 +12,44 @@
                     <tr
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                         <th class="px-4 py-3">No</th>
+                        <th class="px-4 py-3">Code</th>
                         <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Products</th>
-                        <th class="px-4 py-3">Percentage</th>
                         <th class="px-4 py-3">Start Date</th>
                         <th class="px-4 py-3">End Date</th>
+                        <th class="px-4 py-3">Discount Amount</th>
+                        <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    @foreach ($discountProducts as $item)
+                    @foreach ($discount as $item)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                {{ ($discountProducts->currentPage() - 1) * $discountProducts->perPage() + $loop->iteration }}
+                                {{ ($discount->currentPage() - 1) * $discount->perPage() + $loop->iteration }}
                             </td>
                             <td class="px-4 py-3">
-                                @php($d = $discounts->firstWhere('id', $item->discount_id))
-                                {{ $d->name }}
+                                {{ $item->code }}
                             </td>
                             <td class="px-4 py-3">
-                                @php($products = $item->firstWhere('product_id', $item->product_id))
-                                @foreach ( as $product)
-                                    <li>{{ $product->name }}</li>
-                                @endforeach
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $item->percentage }}
+                                {{ $item->name }}
                             </td>
                             <td class="px-4 py-3">
                                 {{ $item->start_date }}
                             </td>
                             <td class="px-4 py-3">
                                 {{ $item->end_date }}
+                            </td>
+                            @if ($item->type == 'percentage')
+                                <td class="px-4 py-3 text-center">
+                                    {{ $item->amount . '%' }}
+                                </td>
+                            @else
+                                <td class="px-4 py-3">
+                                    {{ '$' . $item->amount }}
+                                </td>
+                            @endif
+                            <td class="px-4 py-3">
+                                {{ $item->is_active ? 'Active' : 'Inactive' }}
                             </td>
                             <td class="px-4 py-3 text-xs">
                                 <a href="{{ route('discounts.edit', $item->id) }}"
@@ -68,12 +75,12 @@
     <div
         class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
         <span class="flex items-center col-span-3">
-            Showing {{ $discountProducts->firstItem() }}-{{ $discountProducts->lastItem() }} of {{ $discountProducts->total() }}
+            Showing {{ $discount->firstItem() }}-{{ $discount->lastItem() }} of {{ $discount->total() }}
         </span>
         <span class="col-span-2"></span>
         <!-- Pagination -->
         <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-            {{ $discountProducts->links() }}
+            {{ $discount->links() }}
         </span>
     </div>
     </div>
