@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Countries;
 
 class ProfileController extends Controller
 {
@@ -15,6 +16,11 @@ class ProfileController extends Controller
     public function index()
     {
         return view('landing.auth.profile');
+    }
+
+    public function updatePage()
+    {
+        return view('landing.auth.update-user');
     }
 
     public function update(Request $request)
@@ -43,7 +49,7 @@ class ProfileController extends Controller
         // Save the user
         $user->save();
 
-        return back()->with('success', 'Your profile has been updated successfully.');
+        return redirect()->route('profile')->with('success', 'Your profile has been updated successfully.');
     }
 
     public function changePassword(Request $request)
@@ -76,5 +82,11 @@ class ProfileController extends Controller
         $user->delete();
         Auth::logout();
         return redirect()->route('home')->with('success', 'Your account has been deleted successfully.');
+    }
+
+    public function addresses()
+    {
+        $countries = Countries::all();
+        return view('landing.auth.customer', compact('countries'));
     }
 }

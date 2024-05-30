@@ -23,6 +23,13 @@
         <div class="container">
             @if ($wishlistItems->count() > 0)
                 <div class="row">
+                    <div class="col-lg-12">
+                        @if ($wishlistItems->count() > 1)
+                            <p>Showing {{ $wishlistItems->count() }} items in your wishlist</p>
+                        @else
+                            <p>Showing {{ $wishlistItems->count() }} item in your wishlist</p>
+                        @endif
+                    </div>
                     @foreach ($wishlistItems as $item)
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="product__item">
@@ -30,29 +37,18 @@
                                     data-setbg="
                                         @if (isset($images[$item->id])) {{ asset('storage/' . $images[$item->id]->image) }} @endif">
                                     <ul class="product__hover">
-                                        @if (isset($item))
-                                            <li><a href="#"
-                                                    onclick="event.preventDefault(); document.getElementById('wishlist-add').submit()">
-                                                    <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
-                                                </a>
-                                                <form action="{{ route('wishlist-add') }}" id="wishlist-add" method="POST">
-                                                    @csrf
-                                                    @if (isset($item->id))
-                                                        <input type="hidden" name="id" value="{{ $item->id }}">
-                                                    @endif
-                                                    <input type="hidden" name="quantity" value="1">
-                                                </form>
-                                            </li>
-                                        @endif
-                                        @foreach ($products as $product)
-                                            <li><a href="{{ route('product', $product->slug) }}"><img
-                                                        src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
-                                            </li>
-                                        @endforeach
+                                        <li><a href="javascript:void(0)"
+                                                onclick="removeFromWishlist('{{ $item->rowId }}')">
+                                                <img src="{{ asset('assets/img/icon/heart-red.png') }}" alt="">
+                                            </a>
+                                        </li>
+                                        <li><a href="{{ route('product', $item->model->slug) }}"><img
+                                                    src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6>{{ $item->name }}</h6>
+                                    <h6>{{ $item->model->name }}</h6>
                                     @if (isset($item))
                                         <a href="#"
                                             onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
@@ -74,7 +70,7 @@
                                         <i class="fa fa-star-o"></i>
                                         <i class="fa fa-star-o"></i>
                                     </div>
-                                    <h5>${{ $item->price }}</h5>
+                                    <h5>${{ $item->model->price }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -93,6 +89,27 @@
     </section>
     <!-- Shop Section End -->
 
+    <form action="{{ route('wishlist-remove') }}" id="wishlist-remove" method="POST">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="rowId" id="rowId">
+    </form>
+
+    <form action="{{ route('wishlist-clear') }}" id="wishlist-clear" method="post">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        function removeFromWishlist(rowId) {
+            $('#rowId').val(rowId);
+            $('#wishlist-remove').submit();
+        }
+
+        function clearWishlist() {
+            $('#wishlist-clear').submit();
+        }
+    </script>
     {{-- <script>
         function sortByPrice() {
             var sortValue = document.getElementById('sort').value;

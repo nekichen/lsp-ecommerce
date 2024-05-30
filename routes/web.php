@@ -44,9 +44,11 @@ Route::prefix('/')->group(function () {
         // ACCOUNT
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+        Route::get('profile/update-user', [ProfileController::class, 'updatePage'])->name('update-profile-page');
         Route::post('profile/update', [ProfileController::class, 'update'])->name('update-profile');
         Route::post('profile/change-password', [ProfileController::class, 'changePassword'])->name('change-password');
         Route::post('profile/delete', [ProfileController::class, 'destroy'])->name('delete-account');
+        Route::get('profile/addresses', [ProfileController::class, 'addresses'])->name('customer-address');
 
         // CART
         Route::get('cart', [CartController::class, 'index'])->name('cart');
@@ -59,6 +61,7 @@ Route::prefix('/')->group(function () {
         Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist');
         Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
         Route::delete('wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist-remove');
+        Route::delete('wishlist/clear', [WishlistController::class, 'clearWishlist'])->name('wishlist-clear');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');

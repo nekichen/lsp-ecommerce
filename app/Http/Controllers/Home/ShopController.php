@@ -98,8 +98,6 @@ class ShopController extends Controller
         // Get all related images
         $relatedImages = ProductImages::whereIn('product_id', $relatedProducts->pluck('id'))->get();
 
-        $productInWishlist = Cart::instance('wishlist_' . Auth::user()->id)->content()->pluck('id')->contains($product->id);
-
-        return view('landing.shop.product', compact('relatedProducts', 'relatedImages', 'product', 'images', 'size', 'category', 'brand', 'productInWishlist'));
+        return view('landing.shop.product', compact('relatedProducts', 'relatedImages', 'product', 'images', 'size', 'category', 'brand'));
     }
 }

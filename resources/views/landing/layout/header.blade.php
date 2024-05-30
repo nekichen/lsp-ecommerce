@@ -67,6 +67,7 @@
                             <span>{{ Cart::instance('cart_' . Auth::user()->id)->content()->count() }}</span>
                         @endif
                     </a>
+                    <div class="price">${{ Cart::instance('cart_' . Auth::user()->id)->subtotal() }}</div>
                     <!-- resources/views/landing/layout/header.blade.php -->
                     @if (Auth::check())
                         <a href="#" onclick="$('#userProfileModal').modal('show'); return false;"><img

@@ -36,32 +36,31 @@ class WishlistController extends Controller
 
     public function addToWishlist(Request $request)
     {
-        if (Auth::check()) {
-            $product = Products::find($request->id);
+        $product = Products::find($request->id);
             $user = Auth::user();
             
-            Cart::instance('wishlist_' . $user->id)->add(
-                $product->id,
-                $product->name,
-                $request->quantity,
-                $product->price,
-                ['user_id' => $user->id]
-            )->associate('App\Models\Products');
+        Cart::instance('wishlist_' . $user->id)->add(
+            $product->id,
+            $product->name,
+            1,
+            $product->price,
+            ['user_id' => $user->id]
+        )->associate('App\Models\Products');
 
-            return redirect()->back();
-        } else {
-            return redirect()->route('login')->with('error', 'Please login first');
-        }
+        return redirect()->back()->with('success', 'Product added to wishlist!');
     }
 
     public function removeFromWishlist(Request $request)
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            Cart::instance('wishlist_' . $user->id)->remove($request->rowId);
-            return redirect()->back();
-        } else {
-            return redirect()->route('login')->with('error', 'Please login first');
-        }
+        $rowId = $request->rowId;
+
+        Cart::instance('wishlist_' . Auth::user()->id)->remove($rowId);
+        return redirect()->back()->with('success', 'Product removed from wishlist!');
+    }
+
+    public function clearWishlist()
+    {
+        Cart::instance('wishlist_' . Auth::user()->id)->destroy();
+        return redirect()->back()->with('success', 'Wishlist cleared!');
     }
 }

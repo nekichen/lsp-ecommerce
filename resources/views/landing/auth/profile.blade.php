@@ -1,5 +1,23 @@
 @extends('landing.layout.main')
 @section('content')
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Profile</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{{ route('home') }}">Home</a>
+                            <span>Profile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
     <!-- Contact Section Begin -->
     <section class="contact spad">
         <div class="container">
@@ -13,36 +31,23 @@
                     </div>
                     <div class="contact__form">
                         <div class="row">
-                            <div class="col-lg-6">
-                                <form action="{{ route('update-profile') }}" method="POST">
-                                    @csrf
-                                    <input type="text" placeholder="Change Your Name" name="name">
-                                    <input type="email" placeholder="Change Your Email" name="email">
-                                    <button type="submit" class="site-btn">Update Profile</button>
-                                </form>
+                            <div class="col d-flex">
+                                <a href="{{ route('update-profile-page') }}" class="site-btn">Update Profile</a>
                             </div>
-                            <div class="col-lg-6">
-                                <form action="{{ route('change-password') }}" method="POST">
-                                    @csrf
-                                    <input type="password" placeholder="Type Your Old Password" name="old_password">
-                                    <input type="password" placeholder="Type Your New Password" name="password">
-                                    <div class="row">
-                                        <div class="col d-flex justify-content-start">
-                                            <button type="submit" class="pass-btn">Change Password</button>
-                                        </div>
-                                </form>
-                                <div class="col d-flex justify-content-end">
-                                    <form action="{{ route('delete-account') }}" method="POST" id="form">
-                                        @csrf
-                                        <button type="submit" class="del-btn" id="del-btn" onclick="return confirm('Are you sure?')">Delete Account</button>
-                                    </form>
-                                </div>
+                            <div class="col d-flex">
+                                <a href="{{ route('customer-address') }}" class="site-btn">Customer's Addresses</a>
+                            </div>
+                            <div class="col d-flex">
+                                <a href="#" class="pass-btn">Change Password</a>
+                            </div>
+                            <div class="col d-flex">
+                                <button type="submit" class="del-btn" id="del-btn"
+                                    onclick="return confirm('Are you sure?')">Delete Account</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
     <!-- Contact Section End -->

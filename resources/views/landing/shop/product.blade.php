@@ -75,28 +75,16 @@
                                 </div>
                                 <div class="product__details__btns__option">
                                     @if (isset($product))
-                                        @if (!$productInWishlist)
-                                            <a href="#"
-                                                onclick="event.preventDefault(); document.getElementById('wishlist-add-{{ $product->id }}').submit()">
-                                                <i class="fa fa-heart"></i> add to wishlist
-                                            </a>
-                                            <form action="{{ route('wishlist-add') }}"
-                                                id="wishlist-add-{{ $product->id }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $product->id }}">
-                                                <input type="hidden" name="quantity" value="1">
-                                            </form>
-                                        @else
-                                            <a href="#"
-                                                onclick="event.preventDefault(); document.getElementById('wishlist-remove-{{ $product->id }}').submit()">
-                                                <i class="fa fa-heart"></i> Remove from wishlist
-                                            </a>
-                                            <form action="{{ route('wishlist-remove', $product->id) }}"
-                                                id="wishlist-remove-{{ $product->id }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                        @endif
+                                        <a href="#"
+                                            onclick="event.preventDefault(); document.getElementById('wishlist-add-{{ $product->id }}').submit()">
+                                            <i class="fa fa-heart"></i> add to wishlist
+                                        </a>
+                                        <form action="{{ route('wishlist-add') }}" id="wishlist-add-{{ $product->id }}"
+                                            method="POST">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                        </form>
                                     @else
                                         <p>Product not found.</p>
                                     @endif

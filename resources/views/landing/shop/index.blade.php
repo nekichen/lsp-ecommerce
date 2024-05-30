@@ -132,24 +132,10 @@
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
-                                            @if (!empty($wishlistItem))
-                                                <li><a href="#"
-                                                        onclick="removeFromWishlist('{{ $wishlistItem->rowId }}')">
-                                                        <img src="{{ asset('assets/img/icon/heart-red.png') }}"
-                                                            alt="">
-                                                    </a>
-                                                    <input type="hidden" name="id" value="{{ $item->id }}"
-                                                        data-rowid="{{ $wishlistItem->rowId }}">
-                                                </li>
-                                            @else
-                                                <li><a href="#" onclick="removeFromWishlist('{{ $item->id }}')">
-                                                        <img src="{{ asset('assets/img/icon/heart-red.png') }}"
-                                                            alt="">
-                                                    </a>
-                                                    <input type="hidden" name="id" value="{{ $item->id }}"
-                                                        data-rowid="">
-                                                </li>
-                                            @endif
+                                            <li><a href="#" onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
+                                                    <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
+                                                </a>
+                                            </li>
                                             <li><a href="{{ route('product', $item->slug) }}">
                                                     <img src="{{ asset('assets/img/icon/search.png') }}" alt="">
                                                 </a></li>
@@ -238,9 +224,21 @@
             window.location.href = url.toString();
         }
 
-        function removeFromWishlist(rowId) {
-            $('#rowId').val(rowId);
-            $('#wishlist-remove').submit();
+        function addToWishlist(id, name, quantity, price) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('wishlist-add') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    name: name,
+                    quantity: quantity,
+                    price: price
+                },
+                success: function(data) {
+                    window.location.reload();
+                }
+            })
         }
     </script>
 @endsection
