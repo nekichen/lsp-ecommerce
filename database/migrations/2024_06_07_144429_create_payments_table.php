@@ -17,9 +17,10 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->foreignId('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreignId('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->float('amount');
+            $table->double('amount', 10, 2);
             $table->datetime('payment_date');
-            $table->string('payment_method');
+            $table->enum('payment_method', ['cod', 'bank transfer', 'paypal']);
+            $table->string('account_number')->nullable();
             $table->enum('payment_status', ['not paid', 'paid', 'cancelled'])->default('not paid');
             $table->timestamps();
         });

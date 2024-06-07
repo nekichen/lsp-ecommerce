@@ -14,10 +14,6 @@ class WishlistController extends Controller
     //
     public function index()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         $user = Auth::user();
         $wishlistItems = Cart::instance('wishlist_' . $user->id)->content();
         $images = [];

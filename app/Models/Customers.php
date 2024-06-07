@@ -9,11 +9,19 @@ class Customers extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'user_id',
         'phone',
-        'address1',
-        'address2',
-        'address3',
+        'country_id',
+        'city',
+        'address',
+        'apartment',
+        'zip_code'
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Countries::class);
+    }
 }

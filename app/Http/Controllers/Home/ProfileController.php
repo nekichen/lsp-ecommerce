@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Countries;
+use App\Models\Customers;
 
 class ProfileController extends Controller
 {
@@ -87,6 +88,47 @@ class ProfileController extends Controller
     public function addresses()
     {
         $countries = Countries::all();
-        return view('landing.auth.customer', compact('countries'));
+        $customerId = Customers::where('user_id', Auth::user()->id);
+
+        $customers = $customerId->first();
+        $customer = $customerId->get();
+
+        if($customers == null){
+            return redirect()->route('add-address-page');
+        } else {
+            return view('landing.auth.customer.list', compact('customer'));
+        }
+    }
+
+    public function addAddressPage()
+    {
+        $countries = Countries::all();
+        return view('landing.auth.customer.add', compact('countries'));
+    }
+
+    public function addAddress(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'country' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'zip_code' => 'required',
+        ]);
+
+        $customer = new Customers();
+        $customer->user_id = Auth::user()->id;
+        $customer->first_name = $request->first_name;
+        $customer->last_name = $request->last_name;
+        $customer->phone = $request->phone;
+        $customer->country = $request->country;
+        $customer->address = $request->address;
+        $customer->city = $request->city;
+        $customer->zip_code = $request->zip_code;
+        $customer->save();
+
+        return redirect()->route('addresses')->with('success', 'Your address has been saved successfully.');
     }
 }

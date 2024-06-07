@@ -25,9 +25,13 @@
                 <div class="row">
                     <div class="col-lg-12">
                         @if ($wishlistItems->count() > 1)
-                            <p>Showing {{ $wishlistItems->count() }} items in your wishlist</p>
+                            <p>Showing {{ $wishlistItems->count() }} items in your wishlist. 
+                                <a href="javascript:void(0)" onclick="clearWishlist()">Clear</a>
+                            </p>
                         @else
-                            <p>Showing {{ $wishlistItems->count() }} item in your wishlist</p>
+                            <p>Showing {{ $wishlistItems->count() }} item in your wishlist. 
+                                <a href="javascript:void(0)" onclick="clearWishlist()">Clear</a>
+                            </p>
                         @endif
                     </div>
                     @foreach ($wishlistItems as $item)

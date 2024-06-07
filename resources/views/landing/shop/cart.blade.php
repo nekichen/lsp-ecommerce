@@ -102,10 +102,10 @@
                             <ul>
                                 <li>Subtotal <span>${{ Cart::instance('cart_' . Auth::user()->id)->subtotal() }}</span>
                                 </li>
-                                <li>Tax <span>${{ Cart::instance('cart_' . Auth::user()->id)->tax() }}</span></li>
+                                {{-- <li>Tax <span>${{ Cart::instance('cart_' . Auth::user()->id)->tax() }}</span></li> --}}
                                 <li>Total <span>${{ Cart::instance('cart_' . Auth::user()->id)->total() }}</span></li>
                             </ul>
-                            <a href="#" class="primary-btn">Proceed to checkout</a>
+                            <a href="{{ route('checkout') }}" class="primary-btn">Proceed to checkout</a>
                         </div>
                     </div>
                 </div>

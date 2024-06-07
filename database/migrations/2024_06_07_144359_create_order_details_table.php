@@ -17,8 +17,9 @@ class CreateOrderDetailsTable extends Migration
             $table->id();
             $table->foreignId('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreignId('size_id')->references('id')->on('sizes')->onDelete('cascade');
             $table->integer('quantity');
-            $table->float('subtotal');
+            $table->double('subtotal', 10, 2);
             $table->timestamps();
         });
     }

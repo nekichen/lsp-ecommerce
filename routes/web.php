@@ -48,7 +48,12 @@ Route::prefix('/')->group(function () {
         Route::post('profile/update', [ProfileController::class, 'update'])->name('update-profile');
         Route::post('profile/change-password', [ProfileController::class, 'changePassword'])->name('change-password');
         Route::post('profile/delete', [ProfileController::class, 'destroy'])->name('delete-account');
+
+        // CUSTOMER ADDRESS
         Route::get('profile/addresses', [ProfileController::class, 'addresses'])->name('customer-address');
+            // add address
+        Route::get('profile/add-address', [ProfileController::class, 'addAddressPage'])->name('add-address-page');
+        Route::post('profile/add-new-address', [ProfileController::class, 'addAddress'])->name('add-address');
 
         // CART
         Route::get('cart', [CartController::class, 'index'])->name('cart');
@@ -62,6 +67,14 @@ Route::prefix('/')->group(function () {
         Route::post('wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist-add');
         Route::delete('wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist-remove');
         Route::delete('wishlist/clear', [WishlistController::class, 'clearWishlist'])->name('wishlist-clear');
+
+        // ORDERS
+        Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
+        Route::get('/order/success', function () {
+            return view('landing.shop.order_success');
+        })->name('order.success');
+
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
