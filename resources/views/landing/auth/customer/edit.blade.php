@@ -7,12 +7,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__text">
-                        <h4>Add Customer Details</h4>
+                        <h4>Edit Customer Details</h4>
                         <div class="breadcrumb__links">
                             <a href="{{ route('home') }}">Home</a>
                             <a href="{{ route('profile') }}">Profile</a>
                             <a href="{{ route('customer-address') }}">Customer's Addresses</a>
-                            <span>Add Customer Details</span>
+                            <span>Edit Customer Details</span>
                         </div>
                     </div>
                 </div>
@@ -26,15 +26,16 @@
         <div class="container">
             {{-- Form Customer Begin --}}
             <div class="checkout__form">
-                <form action="{{ route('add-address') }}" method="POST" id="form" enctype="multipart/form-data">
+                <form action="{{ route('edit-address', $customer->id) }}" method="POST" id="form" enctype="multipart/form-data">
                     @csrf
                     <div class="col-lg-12 col-md-12">
-                        <h6 class="checkout__title">Add Customer Details</h6>
+                        <h6 class="checkout__title">Edit Customer Details</h6>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>First Name<span>*</span></p>
-                                    <input type="text" name="first_name" value="{{ old('first_name') }}" placeholder="First Name">
+                                    <input type="text" name="first_name" value="{{ old('first_name', $customer->first_name) }}"
+                                        placeholder="First Name">
                                     @error('first_name')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -43,7 +44,8 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Last Name<span>*</span></p>
-                                    <input type="text" name="last_name" value="{{ old('last_name') }}" placeholder="Last Name">
+                                    <input type="text" name="last_name" value="{{ old('last_name', $customer->last_name) }}"
+                                        placeholder="Last Name">
                                     @error('last_name')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -57,7 +59,8 @@
                                     <select name="country_id" id="country-select" required>
                                         <option value="" disabled selected>Select Country</option>
                                         @foreach ($countries as $country)
-                                            <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
+                                            <option value="{{ $country->id }}"
+                                                {{ old('country_id', $customer->country_id) == $country->id ? 'selected' : '' }}>
                                                 {{ $country->name }}
                                             </option>
                                         @endforeach
@@ -65,7 +68,7 @@
                                     @error('country_id')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
-                                    <input type="text" name="state" value="{{ old('state') }}" placeholder="State">
+                                    <input type="text" name="state" value="{{ old('state', $customer->state) }}" placeholder="State">
                                     @error('state')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -74,11 +77,13 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Address<span>*</span></p>
-                                    <input type="text" placeholder="Street Address" class="checkout__input__add" name="address" value="{{ old('address') }}">
+                                    <input type="text" placeholder="Street Address" class="checkout__input__add"
+                                        name="address" value="{{ old('address', $customer->address) }}">
                                     @error('address')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
-                                    <input type="text" placeholder="Apartment, suite, unit, etc. (optional)" name="apartment" value="{{ old('apartment') }}" >
+                                    <input type="text" placeholder="Apartment, suite, unit, etc. (optional)"
+                                        name="apartment" value="{{ old('apartment', $customer->apartment) }}">
                                     @error('apartment')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -87,21 +92,21 @@
                         </div>
                         <div class="checkout__input">
                             <p>Town/City<span>*</span></p>
-                            <input type="text" name="city" value="{{ old('city') }}" placeholder="City">
+                            <input type="text" name="city" value="{{ old('city', $customer->city) }}" placeholder="City">
                             @error('city')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="checkout__input">
                             <p>Postcode / ZIP<span>*</span></p>
-                            <input type="text" name="zip_code" value="{{ old('zip_code') }}" placeholder="ZIP Code">
+                            <input type="text" name="zip_code" value="{{ old('zip_code', $customer->zip_code) }}" placeholder="ZIP Code">
                             @error('zip_code')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="checkout__input">
                             <p>Phone<span>*</span></p>
-                            <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Phone">
+                            <input type="text" name="phone" value="{{ old('phone', $customer->phone) }}" placeholder="Phone">
                             @error('phone')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -118,11 +123,11 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Apply Select2 to the country select element
-        $('#country-select').select2();
-    });
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Apply Select2 to the country select element
+            $('#country-select').select2();
+        });
+    </script>
 @endpush

@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('invoice_number');
             $table->foreignId('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->datetime('order_date');
+            $table->foreignId('discount_id')->references('id')->on('discounts')->onDelete('cascade')->nullable();
             $table->double('total', 10, 2);
             $table->text('notes')->nullable();
             $table->enum('status', ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']);

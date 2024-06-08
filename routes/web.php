@@ -13,7 +13,6 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\DiscountsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CustomersController;
-use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ShopController;
 use App\Http\Controllers\Home\ProfileController;
@@ -54,6 +53,11 @@ Route::prefix('/')->group(function () {
             // add address
         Route::get('profile/add-address', [ProfileController::class, 'addAddressPage'])->name('add-address-page');
         Route::post('profile/add-new-address', [ProfileController::class, 'addAddress'])->name('add-address');
+            // activate address
+        Route::post('/activate-address/{id}', [ProfileController::class, 'activateAddress'])->name('activate-address');
+            // edit address
+        Route::get('profile/edit-address/{id}', [ProfileController::class, 'editAddressPage'])->name('edit-address-page');
+        Route::post('profile/edit-address/edit{id}', [ProfileController::class, 'editAddress'])->name('edit-address');
 
         // CART
         Route::get('cart', [CartController::class, 'index'])->name('cart');
@@ -70,11 +74,12 @@ Route::prefix('/')->group(function () {
 
         // ORDERS
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout/coupon', [CartController::class, 'applyCoupon'])->name('apply-coupon');
         Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
         Route::get('/order/success', function () {
-            return view('landing.shop.order_success');
+            return view('landing.shop.order-success');
         })->name('order.success');
-
+        Route::get('orders', [ProfileController::class, 'orders'])->name('orders');
     });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
@@ -103,7 +108,6 @@ Route::prefix('admin')->group(function () {
         Route::resource('sizes', SizesController::class);
         Route::resource('products', ProductsController::class);
         Route::resource('discounts', DiscountsController::class);
-        Route::resource('payments', PaymentsController::class);
         Route::resource('orders', OrdersController::class);
         Route::resource('customers', CustomersController::class);
         Route::post('logout', [AdminController::class, 'logout'])->name('admin.logout');

@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-3">
                 <div class="header__logo">
-                    <a href="{{ route('home') }}"><img src="{{ asset('assets/img/logo.png') }}" alt=""></a>
+                    <a href="{{ route('home') }}"><h2>★ <b>HOSHI</b>-ON!</h2></a>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">

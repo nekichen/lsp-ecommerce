@@ -40,8 +40,6 @@ class UserController extends Controller
         } else {
             return back()->with('error', 'Something went wrong. Please try again.');
         }
-
-        return back()->with('error', 'Something went wrong');
     }
 
     public function authenticate(Request $request)

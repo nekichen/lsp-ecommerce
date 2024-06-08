@@ -12,7 +12,13 @@ class Orders extends Model
         'invoice_number',
         'customer_id',
         'order_date',
-        'total_amount',
-        'status'
+        'total',
+        'notes',
+        'status',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

@@ -21,7 +21,7 @@ class CreatePaymentsTable extends Migration
             $table->datetime('payment_date');
             $table->enum('payment_method', ['cod', 'bank transfer', 'paypal']);
             $table->string('account_number')->nullable();
-            $table->enum('payment_status', ['not paid', 'paid', 'cancelled'])->default('not paid');
+            $table->enum('payment_status', ['not paid', 'paid', 'cancelled']);
             $table->timestamps();
         });
     }

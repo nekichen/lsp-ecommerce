@@ -20,7 +20,7 @@
             <div class="modal-footer d-flex justify-content-between">
                     <a href="{{ route('profile') }}" class="user link-button">
                         <img src="{{ asset('assets/img/icon/edit.png') }}" alt="" class="change-profile">
-                        Change Profile
+                        Profile
                     </a>
                     <form action="{{ route('logout') }}" method="post" style="display:inline;">
                         @csrf

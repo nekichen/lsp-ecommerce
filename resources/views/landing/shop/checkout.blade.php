@@ -17,70 +17,69 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <p id="selectedCustomerName">{{ $addresses->first()->first_name }} {{ $addresses->first()->last_name }}</p>
-                                                <p id="selectedCustomerPhone">{{ $addresses->first()->phone }}</p>
-                                                <p id="selectedCustomerAddress">{{ $addresses->first()->address }}</p>
-                                                <p id="selectedCustomerCity">{{ $addresses->first()->city }}</p>
-                                                <p id="selectedCustomerCountry">{{ $addresses->first()->country->name }}</p>
-                                                <p id="selectedCustomerZip">{{ $addresses->first()->zip_code }}</p>
+                                                @if ($addresses->isNotEmpty())
+                                                    <p id="selectedCustomerName">{{ $addresses->first()->first_name }}
+                                                        {{ $addresses->first()->last_name }}</p>
+                                                    <p id="selectedCustomerPhone">{{ $addresses->first()->phone }}</p>
+                                                    <p id="selectedCustomerAddress">{{ $addresses->first()->address }}</p>
+                                                    <p id="selectedCustomerCity">{{ $addresses->first()->city }}</p>
+                                                    <p id="selectedCustomerCountry">{{ $addresses->first()->country->name }}
+                                                    </p>
+                                                    <p id="selectedCustomerZip">{{ $addresses->first()->zip_code }}</p>
+                                                @endif
                                             </div>
                                             <div class="col-lg-12 text-right">
-                                                <a class="btn btn-link" href="#">Edit</a>
+                                                <a href="{{ route('customer-address') }}"
+                                                    class="btn btn-sm btn-primary">Change Address</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="checkout__input">
-                                <p>Select Address<span>*</span></p>
-                                <select id="address_id" name="address_id" class="form-control" required>
-                                    @foreach($addresses as $address)
-                                        <option value="{{ $address->id }}" 
-                                                data-first_name="{{ $address->first_name }}"
-                                                data-last_name="{{ $address->last_name }}"
-                                                data-phone="{{ $address->phone }}"
-                                                data-address="{{ $address->address }}"
-                                                data-city="{{ $address->city }}"
-                                                data-country="{{ $address->country->name }}"
-                                                data-zip_code="{{ $address->zip_code }}">
-                                            {{ $address->address }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="checkout__input">
-                                <p>Order notes<span> (optional)</span></p>
-                                <textarea id="notes" name="notes" class="form-control"
-                                    placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                <p>Order notes<span>Optional</span></p>
+                                <input type="text" placeholder="Notes about your order, e.g. special notes for delivery."
+                                    name="notes">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="checkout__order">
                                 <h4 class="order__title">Your order</h4>
-                                <div class="checkout__order__products">Product <span>Total</span></div>
+                                <div class="checkout__order__products">Products <span>Total</span></div>
                                 <ul class="checkout__total__products">
-                                    @foreach($cartItems as $item)
-                                        <li>{{ $item->name }} ({{ $item->options->size }}) <span>${{ $item->price * $item->qty }}</span></li>
+                                    @foreach ($cartItems as $item)
+                                        <li>{{ $item->name }} ({{ $item->options->size }}) x {{ $item->qty }}
+                                            <span>${{ number_format($item->price * $item->qty, 2) }}</span>
+                                        </li>
                                     @endforeach
                                 </ul>
-                                <ul class="checkout__total__all">
-                                    <li>Subtotal <span>${{ $total }}</span></li>
-                                    <li>Total <span>${{ $total }}</span></li>
-                                </ul>
+                                @if (is_numeric($total) && is_numeric($total_amount))
+                                    <ul class="checkout__total__all">
+                                        <li>Subtotal <span>${{ number_format($total, 2) }}</span></li>
+                                        <li>Total <span>${{ number_format($total_amount, 2) }}</span></li>
+                                    </ul>
+                                @endif
+
+                                <input type="hidden" name="address_id" value="{{ $addresses->first()->id }}">
                                 <div class="checkout__input__checkbox">
-                                    <label for="payment_method_cod">
+                                    <label for="cod">
                                         Cash on Delivery
-                                        <input type="radio" id="payment_method_cod" name="payment_method" value="cod" required>
+                                        <input type="radio" id="cod" name="payment_method" value="cod" checked>
                                         <span class="checkmark"></span>
                                     </label>
-                                    <label for="payment_method_bank_transfer">
+                                </div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="bank_transfer">
                                         Bank Transfer
-                                        <input type="radio" id="payment_method_bank_transfer" name="payment_method" value="bank transfer" required>
+                                        <input type="radio" id="bank_transfer" name="payment_method"
+                                            value="bank transfer">
                                         <span class="checkmark"></span>
                                     </label>
-                                    <label for="payment_method_paypal">
-                                        Paypal
-                                        <input type="radio" id="payment_method_paypal" name="payment_method" value="paypal" required>
+                                </div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="paypal">
+                                        PayPal
+                                        <input type="radio" id="paypal" name="payment_method" value="paypal">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -93,18 +92,4 @@
         </div>
     </section>
     <!-- Checkout Section End -->
-@endsection
-
-@section('scripts')
-<script>
-    document.getElementById('address_id').addEventListener('change', function() {
-        var selectedOption = this.options[this.selectedIndex];
-        document.getElementById('selectedCustomerName').innerText = selectedOption.getAttribute('data-first_name') + ' ' + selectedOption.getAttribute('data-last_name');
-        document.getElementById('selectedCustomerPhone').innerText = selectedOption.getAttribute('data-phone');
-        document.getElementById('selectedCustomerAddress').innerText = selectedOption.getAttribute('data-address');
-        document.getElementById('selectedCustomerCity').innerText = selectedOption.getAttribute('data-city');
-        document.getElementById('selectedCustomerCountry').innerText = selectedOption.getAttribute('data-country');
-        document.getElementById('selectedCustomerZip').innerText = selectedOption.getAttribute('data-zip_code');
-    });
-</script>
 @endsection

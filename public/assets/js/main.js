@@ -102,7 +102,8 @@
     /*--------------------------
         Select
     ----------------------------*/
-    // $("select").niceSelect();
+    // Apply niceSelect to all select elements except the one with the ID 'country-select'
+    $("select").not("#country-select").niceSelect();
 
     /*-------------------
 		Radio Btn

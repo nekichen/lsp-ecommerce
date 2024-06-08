@@ -64,7 +64,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="cart__price">${{ $item->subtotal() }}</td>
+                                                <td class="cart__price">${{ number_format($item->price * $item->qty, 2) }}
+                                                </td>
                                                 <td class="cart__close">
                                                     <a onclick="removeItem('{{ $item->rowId }}')">
                                                         <i class="fa fa-close"></i>
@@ -92,18 +93,21 @@
                     <div class="col-lg-4">
                         <div class="cart__discount">
                             <h6>Discount codes</h6>
-                            <form action="#">
-                                <input type="text" placeholder="Coupon code">
+                            <form action="{{ route('apply-coupon') }}" method="POST">
+                                @csrf
+                                <input type="text" placeholder="Coupon code" name="coupon_code">
                                 <button type="submit">Apply</button>
                             </form>
                         </div>
                         <div class="cart__total">
                             <h6>Cart total</h6>
                             <ul>
-                                <li>Subtotal <span>${{ Cart::instance('cart_' . Auth::user()->id)->subtotal() }}</span>
+                                <li>Subtotal
+                                    <span>${{ session('total_amount', Cart::instance('cart_' . Auth::user()->id)->subtotal()) }}</span>
                                 </li>
-                                {{-- <li>Tax <span>${{ Cart::instance('cart_' . Auth::user()->id)->tax() }}</span></li> --}}
-                                <li>Total <span>${{ Cart::instance('cart_' . Auth::user()->id)->total() }}</span></li>
+                                <li>Total
+                                    <span>${{ session('total_amount', Cart::instance('cart_' . Auth::user()->id)->total()) }}</span>
+                                </li>
                             </ul>
                             <a href="{{ route('checkout') }}" class="primary-btn">Proceed to checkout</a>
                         </div>
@@ -121,6 +125,7 @@
         </div>
     </section>
     <!-- Shopping Cart Section End -->
+
     <form action="{{ route('update-cart') }}" id="update-cart" method="POST">
         @csrf
         @method('PUT')
@@ -140,6 +145,29 @@
     </form>
 
     <script>
+        // Function to update item subtotal
+        function updateItemSubtotal(input) {
+            var rowId = $(input).data('rowid');
+            var quantity = $(input).val();
+            var price = parseFloat($(input).closest('tr').find('.cart__price').data('price'));
+            var subtotal = quantity * price;
+            $(input).closest('tr').find('.cart__price').text('$' + subtotal.toFixed(2));
+
+            // Recalculate total by summing up all item subtotals
+            var total = 0;
+            $('.cart__price').each(function() {
+                total += parseFloat($(this).text().replace('$', ''));
+            });
+            // Update displayed total
+            $('.cart__total span').text('$' + total.toFixed(2));
+        }
+
+        // Bind quantity change event to all quantity inputs
+        $('.quantity__item input').on('change', function() {
+            updateItemSubtotal(this);
+        });
+
+        // JavaScript function to handle quantity change event
         function updateQuantity(qty) {
             var rowId = $(qty).data('rowid');
             var quantity = $(qty).val();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use Illuminate\Http\Request;
+use App\Models\Customers;
 
 class OrdersController extends Controller
 {
@@ -16,8 +17,9 @@ class OrdersController extends Controller
     {
         //
         $orders = Orders::paginate(10);
+        $customers = Customers::all();
 
-        return view('dashboard.orders.index', compact('orders'), [
+        return view('dashboard.orders.index', compact('orders', 'customers'), [
             'orders' => Orders::all(),
             'create' => route('orders.create'),
         ]);

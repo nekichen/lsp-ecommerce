@@ -51,28 +51,37 @@
                                             </label>
                                         @endforeach
                                     </div>
-                                </div>
-                                <div class="product__details__cart__option">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1" id="qty">
-                                        </div>
+                                    <div class="product__details__option__color">
+                                        @if ($product->stock > 0)
+                                            <span>Stock: {{ $product->stock }}</span>
+                                        @else
+                                            <span>Out of Stock</span>
+                                        @endif
                                     </div>
-                                    @if (isset($product))
-                                        <button class="primary-btn" onclick="addToCart()">add
-                                            to cart</button>
-                                        <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
-                                            @csrf
-                                            @if (isset($product->id))
-                                                <input type="hidden" name="id" value="{{ $product->id }}">
-                                            @endif
-                                            <input type="hidden" name="quantity" id="hidden-qty">
-                                            <input type="hidden" name="size" id="selected-size" value="">
-                                        </form>
-                                    @else
-                                        <p>Product not found.</p>
-                                    @endif
                                 </div>
+                                @if ($product->stock > 0)
+                                    <div class="product__details__cart__option">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" value="1" id="qty">
+                                            </div>
+                                        </div>
+                                        @if (isset($product))
+                                            <button class="primary-btn" onclick="addToCart()">add
+                                                to cart</button>
+                                            <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
+                                                @csrf
+                                                @if (isset($product->id))
+                                                    <input type="hidden" name="id" value="{{ $product->id }}">
+                                                @endif
+                                                <input type="hidden" name="quantity" id="hidden-qty">
+                                                <input type="hidden" name="size" id="selected-size" value="">
+                                            </form>
+                                        @else
+                                            <p>Product not found.</p>
+                                        @endif
+                                    </div>
+                                @endif
                                 <div class="product__details__btns__option">
                                     @if (isset($product))
                                         <a href="#"

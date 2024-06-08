@@ -131,25 +131,6 @@
                 <span class="ml-4">Orders</span>
             </a>
         </li>
-        {{-- PAYMENTS --}}
-        <li class="relative px-6 py-3">
-            @if (request()->routeIs('payments.*'))
-                <span class="absolute inset-y-0 left-0 w-1 bg-orange-600 rounded-tr-lg rounded-br-lg"
-                    aria-hidden="true"></span>
-            @endif
-            <a href="{{ route('payments.index') }}"
-                class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('payments.*') ? 'text-gray-800 dark:text-gray-100' : '' }}">
-                <!-- https://feathericons.dev/?search=dollar-sign&iconset=feather -->
-                <svg class="w-5 h-5" viewBox="0 0 24 24" width="24" height="24" class="main-grid-item-icon"
-                    fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                    stroke-width="2">
-                    <line x1="12" x2="12" y1="1" y2="23" />
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-
-                <span class="ml-4">Payments</span>
-            </a>
-        </li>
         {{-- CUSTOMERS --}}
         <li class="relative px-6 py-3">
             @if (request()->routeIs('customers.*'))
