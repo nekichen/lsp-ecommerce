@@ -23,9 +23,23 @@ class WishlistController extends Controller
         $products = [];
 
         foreach ($wishlistItems as $item) {
-            $product = Products::find($item->id);
+            // Use eager loading to retrieve product with reviews and customer
+            $product = Products::with('reviews.customer')->find($item->id);
             if ($product) {
-                $products[] = $product;
+                // Calculate the average rating for the product
+                $totalRating = 0;
+                $totalReviews = $product->reviews->count();
+
+                foreach ($product->reviews as $review) {
+                    $totalRating += $review->rating;
+                }
+
+                $product->averageRating = $totalReviews > 0 ? round($totalRating / $totalReviews, 2) : 0;
+
+                // Assign averageRating to each item in wishlist
+                $item->averageRating = $product->averageRating;
+
+                $products[] = $item; // Push the item to products array
                 $images[$item->id] = ProductImages::where('product_id', $item->id)->first();
             }
         }

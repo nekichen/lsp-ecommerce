@@ -72,11 +72,13 @@
                                         </form>
                                     @endif
                                     <div class="rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $item->averageRating)
+                                                <i class="fa fa-star" style="color: gold;"></i>
+                                            @else
+                                                <i class="fa fa-star-o"></i>
+                                            @endif
+                                        @endfor
                                     </div>
                                     <h5>${{ $item->model->price }}</h5>
                                 </div>

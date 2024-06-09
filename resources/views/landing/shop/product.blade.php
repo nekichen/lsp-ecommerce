@@ -218,8 +218,10 @@
                                             {{ asset('storage/' . $image->image) }}"
                                         @endforeach @endif>
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}"
-                                                    alt=""></a></li>
+                                        <li><a href="#"
+                                                onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')"><img
+                                                    src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a>
+                                        </li>
                                         <li><a href="{{ route('product', $item->slug) }}"><img
                                                     src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
                                         </li>
@@ -325,5 +327,22 @@
                     });
                 }
             });
+
+            function addToWishlist(id, name, quantity, price) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('wishlist-add') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id,
+                        name: name,
+                        quantity: quantity,
+                        price: price
+                    },
+                    success: function(data) {
+                        window.location.reload();
+                    }
+                })
+            }
         </script>
     @endsection

@@ -132,8 +132,8 @@
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
-                                            <li><a href="#"
-                                                    onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
+                                            <li><a href="#" 
+                                                onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
                                                     <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
                                                 </a>
                                             </li>
@@ -145,8 +145,7 @@
                                         <div class="product__item__text">
                                             <h6>{{ $item->name }}</h6>
                                             @if ($item->stock > 0)
-                                                <a href="#"
-                                                    onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
+                                                <a href="{{ route('product', $item->slug) }}"
                                                     class="add-cart">
                                                     + Add To Cart
                                                 </a>
@@ -186,12 +185,6 @@
         </div>
     </section>
     <!-- Shop Section End -->
-
-    <form action="{{ route('wishlist-remove') }}" id="wishlist-remove" method="POST">
-        @csrf
-        @method('DELETE')
-        <input type="hidden" name="rowId" id="rowId">
-    </form>
 
     <script>
         function sortByPrice() {

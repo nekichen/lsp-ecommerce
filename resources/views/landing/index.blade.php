@@ -75,20 +75,24 @@
                                 <span class="label">
                                     BEST SELLER</span>
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
+                                        <li><a href="#"
+                                                onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
+                                                <img src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a></li>
                                         <li><a href="{{ route('product', $item->slug) }}"><img
-                                                    src="assets/img/icon/search.png" alt=""></a></li>
+                                                    src="{{ asset('assets/img/icon/search.png') }}" alt=""></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
                                     <h6>{{ $item->name }}</h6>
                                     <a href="#" class="add-cart">+ Add To Cart</a>
                                     <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $item->averageRating)
+                                                <i class="fa fa-star" style="color: gold;"></i>
+                                            @else
+                                                <i class="fa fa-star-o"></i>
+                                            @endif
+                                        @endfor
                                     </div>
                                     <h5>${{ $item->price }}</h5>
                                 </div>
@@ -109,20 +113,26 @@
                                 <span class="label">
                                     New</span>
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
+                                        <li><a href="#"
+                                                onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
+                                                ><img src="{{ asset('assets/img/icon/heart.png') }}" alt=""></a>
+                                        </li>
                                         <li><a href="{{ route('product', $item->slug) }}"><img
-                                                    src="assets/img/icon/search.png" alt=""></a></li>
+                                                    src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
                                     <h6>{{ $item->name }}</h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <a href="{{ route('product', $item->slug) }}" class="add-cart">+ Add To Cart</a>
                                     <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $item->averageRating)
+                                                <i class="fa fa-star" style="color: gold;"></i>
+                                            @else
+                                                <i class="fa fa-star-o"></i>
+                                            @endif
+                                        @endfor
                                     </div>
                                     <h5>${{ $item->price }}</h5>
                                 </div>
@@ -134,4 +144,23 @@
         </div>
     </section>
     <!-- Product Section End -->
+
+    <script>
+        function addToWishlist(id, name, quantity, price) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('wishlist-add') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    name: name,
+                    quantity: quantity,
+                    price: price
+                },
+                success: function(data) {
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
 @endsection
