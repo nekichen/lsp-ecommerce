@@ -14,7 +14,6 @@
                         <th class="px-4 py-3">Invoice Number</th>
                         <th class="px-4 py-3">Customer</th>
                         <th class="px-4 py-3">Date</th>
-                        {{-- <th class="px-4 py-3">Total</th> --}}
                         <th class="px-4 py-3">Status</th>
                     </tr>
                 </thead>
@@ -25,7 +24,10 @@
                                 {{ $i + 1 . '. ' }}
                             </td>
                             <td class="px-4 py-3">
-                                {{ $item->invoice_number }}
+                                <a href="{{ route('orders.edit', $item->id) }}"
+                                    class="hover:text-orange-800">
+                                    {{ $item->invoice_number }}
+                                </a>
                             </td>
                             <td class="px-4 py-3">
                                 @if ($item->customer_id)
@@ -38,9 +40,6 @@
                             <td class="px-4 py-3">
                                 {{ $item->order_date }}
                             </td>
-                            {{-- <td class="px-4 py-3">
-                                {{ $item->total_amount }}
-                            </td> --}}
                             @if ($item->status == 'Pending')
                                 <td class="px-4 py-3">
                                     {{ $item->status }}

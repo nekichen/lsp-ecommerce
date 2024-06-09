@@ -111,29 +111,19 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
-        $product = Products::find($id);
-        $brands = Brands::all();
+        $product = Products::findOrFail($id);
         $categories = Categories::all();
-        // $images = ProductImages::all();
-
-        if (!$product) {
-            return redirect()->route('products.index')->with('message', 'Product not found');
-        }
-
-        return view('dashboard.products.edit', compact('product', 'brands', 'categories'));
+        $brands = Brands::all();
+        $images = ProductImages::where('product_id', $id)->get();
+        return view('dashboard.products.edit', compact('product', 'categories', 'brands', 'images'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        // Find the product
+        $product = Products::findOrFail($id);
+
+        // Validate incoming request data
         $data = $request->validate([
             'name' => 'required',
             'slug' => 'required',
@@ -143,13 +133,42 @@ class ProductsController extends Controller
             'price' => 'required',
             'brand_id' => 'required',
             'category_id' => 'required',
-            'active' => 'required',
         ]);
 
-        Products::where('id', $id)->update($data);
+        // Update the product
+        $product->update($data);
 
-        return redirect()->route('products.index')->with('message', 'Product updated successfully');
+        // Validate images separately
+        $request->validate([
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
 
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Handle the file upload
+                $image_path = $image->store('images/products', 'public');
+
+                // Initialize a new ProductImages instance
+                $product_image = new ProductImages();
+                $product_image->product_id = $product->id;
+                $product_image->image = $image_path;
+
+                // Save the product image record
+                $product_image->save();
+            }
+        }
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+    }
+
+    public function deleteImage($id)
+    {
+        $image = ProductImages::findOrFail($id);
+        Storage::delete('public/' . $image->image);
+        $image->delete();
+        
+        return back()->with('success', 'Image deleted successfully.');
     }
 
     /**
@@ -168,4 +187,17 @@ class ProductsController extends Controller
         return back()->with('error', 'Product not found');
     }
 
+    public function activate($id)
+    {
+        $product = Products::find($id);
+
+        if($product->active == 'yes'){
+            $product->active = 'no';
+        } else {
+            $product->active = 'yes';
+        }
+
+        $product->save();
+        return back()->with('message', 'Product status updated successfully');
+    }
 }

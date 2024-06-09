@@ -57,9 +57,14 @@
                                     <ul class="checkout__total__all">
                                         <li>Subtotal <span>${{ number_format($total, 2) }}</span></li>
                                         <li>Total <span>${{ number_format($total_amount, 2) }}</span></li>
+                                        @if (session('total_amount') != session('discounted_total'))
+                                            <li> Discount <span>${{ number_format(session('discount_amount'), 2) }}</span>
+                                            </li>
+                                            <li class="discount">Discount applied <b>({{ session('discount_code') }})</b>
+                                            </li>
+                                        @endif
                                     </ul>
                                 @endif
-
                                 <input type="hidden" name="address_id" value="{{ $addresses->first()->id }}">
                                 <div class="checkout__input__checkbox">
                                     <label for="cod">
@@ -83,6 +88,9 @@
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
+                                <div class="account_number_field" id="account_number_field" style="display: none;">
+                                    Account Number<span>*</span>: <input type="text" name="account_number">
+                                </div>
                                 <button type="submit" class="site-btn">PLACE ORDER</button>
                             </div>
                         </div>
@@ -92,4 +100,39 @@
         </div>
     </section>
     <!-- Checkout Section End -->
+
+    <script>
+        // Get the radio buttons
+        var codRadio = document.getElementById('cod');
+        var bankTransferRadio = document.getElementById('bank_transfer');
+        var paypalRadio = document.getElementById('paypal');
+        var accountNumberField = document.getElementById('account_number_field');
+
+        // Add event listener to cod radio button
+        codRadio.addEventListener('change', function() {
+            // If cod is selected, show the account number field
+            if (this.checked) {
+                accountNumberField.style.display = 'none';
+            }
+        });
+        
+        // Add event listener to bank transfer radio button
+        bankTransferRadio.addEventListener('change', function() {
+            // If bank transfer is selected, show the account number field
+            if (this.checked) {
+                accountNumberField.style.display = 'block';
+            } else {
+                // If not, hide the account number field
+                accountNumberField.style.display = 'none';
+            }
+        });
+
+        // Add event listener to paypal radio button
+        paypalRadio.addEventListener('change', function() {
+            // If paypal is selected, hide the account number field
+            if (this.checked) {
+                accountNumberField.style.display = 'none';
+            }
+        });
+    </script>
 @endsection

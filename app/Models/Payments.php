@@ -18,19 +18,4 @@ class Payments extends Model
         'account_number',
         'payment_status',
     ];
-
-    public function setPaymentStatusAttribute($value)
-    {
-        // Ensure that the value is one of the allowed statuses
-        $allowedStatuses = ['not paid', 'paid', 'cancelled'];
-        
-        // If the payment method is 'cod', set the status to 'not paid'
-        if ($this->payment_method === 'cod') {
-            $this->attributes['payment_status'] = 'not paid';
-        }
-        // For other payment methods, set the status to 'paid'
-        else {
-            $this->attributes['payment_status'] = 'paid';
-        }
-    }
 }

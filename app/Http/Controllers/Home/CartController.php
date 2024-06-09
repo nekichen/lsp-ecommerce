@@ -68,9 +68,25 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
         $user = Auth::user();
-        Cart::instance('cart_' . $user->id)->update($request->rowId, $request->quantity);
-        Session::forget('total_amount');
-    
+        $cart = Cart::instance('cart_' . $user->id);
+
+        // Get the current quantity in the cart for the item
+        $currentQuantity = $cart->get($request->rowId)->qty;
+
+        // Get the product associated with the cart item
+        $product = Products::find($cart->get($request->rowId)->id);
+
+        // Check if the requested quantity exceeds the available stock
+        if ($request->quantity > $product->stock) {
+            return redirect()->back()->with('error', 'Quantity exceeds available stock.');
+        }
+
+        // Update the cart
+        $cart->update($request->rowId, $request->quantity);
+
+        // Clear any discount-related session data
+        Session::forget(['discount_code', 'discounted_total', 'discount_amount', 'total_amount']);
+
         return redirect()->back();
     }
 
@@ -78,7 +94,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
         Cart::instance('cart_' . $user->id)->remove($request->rowId_D);
-        Session::forget('total_amount');
+        Session::forget(['discount_code', 'discounted_total', 'discount_amount', 'total_amount']);
     
         return redirect()->back();
     }
@@ -87,7 +103,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
         Cart::instance('cart_' . $user->id)->destroy();
-        Session::forget('total_amount');
+        Session::forget(['discount_code', 'discounted_total', 'discount_amount', 'total_amount']);
     
         return redirect()->back();
     }
@@ -95,29 +111,45 @@ class CartController extends Controller
     public function checkout()
     {
         $user = Auth::user();
-        $cartItems = Cart::instance('cart_' . $user->id)->content();
+        $cartInstance = Cart::instance('cart_' . $user->id);
+        $cartItems = $cartInstance->content();
 
-        $total = floatval(str_replace(',', '', Cart::instance('cart_' . $user->id)->subtotal())); // Use subtotal instead of total
-        $total_amount = session('total_amount', $total); // Retrieve total_amount from session if available
+        $subtotal = floatval(str_replace(',', '', $cartInstance->subtotal())); // Gunakan subtotal sebagai dasar perhitungan
+        $total_amount = session('total_amount', $subtotal); // Ambil total_amount dari sesi jika tersedia
 
-        // Retrieve all addresses for the user
+        // Ambil informasi kupon dari sesi jika tersedia
+        $discountCode = session('discount_code');
+        $discountedTotal = session('discounted_total', 0);
+        $discountAmount = session('discount_amount', 0);
+
+        // Hitung total pesanan setelah diskon
+        $total = $total_amount - $discountAmount;
+
+        // Mendapatkan alamat pengiriman pengguna
         $addresses = Customers::where('user_id', $user->id)->with('country')->get();
 
         if ($addresses->isEmpty()) {
             return redirect()->route('add-address-page')->with('error', 'Please add an address to proceed.');
         }
 
-        if (count($cartItems) == 0) {
+        if ($cartItems->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Cart is empty');
-        } else {
-            return view('landing.shop.checkout', compact('cartItems', 'total', 'total_amount', 'addresses'));
         }
+
+        // Pass data ke view checkout
+        return view('landing.shop.checkout', compact('cartItems', 'subtotal', 'total_amount', 'addresses', 'discountCode', 'discountedTotal', 'total'));
     }
 
     public function applyCoupon(Request $request)
     {
         $couponCode = $request->coupon_code;
 
+        // Validate the coupon code
+        if (empty($couponCode)) {
+            return redirect()->back()->with('error', 'Coupon code is required.');
+        }
+
+        // Find the discount associated with the coupon code
         $discount = Discounts::where('code', $couponCode)
                             ->where('is_active', true)
                             ->whereDate('start_date', '<=', now())
@@ -125,22 +157,37 @@ class CartController extends Controller
                             ->first();
 
         if ($discount) {
-            $user = Auth::user();
-            $cartInstance = Cart::instance('cart_' . $user->id);
-            $subtotal = (double)(str_replace(',', '', $cartInstance->subtotal()));
-            $discountedTotal = 0;
-
-            if ($discount->type == 'fixed') {
-                $discountedTotal = $subtotal - $discount->amount;
-                // Pastikan tidak kurang dari nol
-                $discountedTotal = max($discountedTotal, 0);
-            } else {
-                // Hitung diskon dalam bentuk persentase
-                $discountedTotal = $subtotal * (1 - ($discount->amount / 100));
+            // Check if the discount has reached its maximum usage per order
+            if ($this->discountReachedMaxUsage($discount)) {
+                return redirect()->back()->with('error', 'Coupon has reached its maximum usage per order.');
             }
 
-            // Update session dengan total yang didiskon
-            session(['total_amount' => number_format($discountedTotal, 2), 'discounted_total' => $discountedTotal]);
+            $user = Auth::user();
+            $cartInstance = Cart::instance('cart_' . $user->id);
+            $subtotal = (float) str_replace(',', '', $cartInstance->subtotal());
+            $discountedTotal = 0;
+
+            // Calculate the discount amount
+            $discountAmount = ($discount->type == 'fixed') ? $discount->amount : ($subtotal * $discount->amount / 100);
+
+            // Check if the discount has reached its maximum usage per user
+            if ($this->discountReachedMaxUserUsage($discount, $user)) {
+                return redirect()->back()->with('error', 'Coupon has reached its maximum usage per user.');
+            }
+
+            // Calculate the discounted total
+            $discountedTotal = max($subtotal - $discountAmount, 0);
+
+            // Store discount information in the session
+            session([
+                'discounted_total' => $discountedTotal,
+                'discount_code' => $couponCode,
+                'total_amount' => $subtotal,
+                'discount_amount' => $discountAmount
+            ]);
+
+            // Increment the usage count for the discount
+            $this->incrementUsageCount($discount);
 
             return redirect()->back()->with('success', 'Coupon applied successfully.');
         } else {
@@ -148,12 +195,42 @@ class CartController extends Controller
         }
     }
 
+    // Check if the discount has reached its maximum usage per order
+    public function discountReachedMaxUsage($discount)
+    {
+        $user = Auth::user();
+        $usageCount = Session::get('discount_usage_' . $user->id . '_' . $discount->id, 0);
+        return $discount->max_use !== null && $usageCount >= $discount->max_use;
+    }
+
+    // Check if the discount has reached its maximum usage per user
+    public function discountReachedMaxUserUsage($discount, $user)
+    {
+        $usageCount = Session::get('discount_usage_user_' . $discount->id . '_' . $user->id, 0);
+        return $discount->max_user !== null && $usageCount >= $discount->max_user;
+    }
+
+    // Increment the usage count for the discount
+    public function incrementUsageCount($discount)
+    {
+        // Increment overall usage count
+        $usageCount = Session::get('discount_usage_' . $discount->id, 0);
+        $usageCount++;
+        Session::put('discount_usage_' . $discount->id, $usageCount);
+
+        // Increment usage count per user
+        $user = Auth::user();
+        $usageCountUser = Session::get('discount_usage_user_' . $discount->id . '_' . $user->id, 0);
+        $usageCountUser++;
+        Session::put('discount_usage_user_' . $discount->id . '_' . $user->id, $usageCountUser);
+    }
 
     public function processCheckout(Request $request)
     {
         $request->validate([
             'address_id' => 'required|exists:customers,id',
             'payment_method' => 'required|in:cod,bank transfer,paypal',
+            'account_number' => 'required_if:payment_method,bank transfer|numeric',
             'notes' => 'nullable|string'
         ]);
 
@@ -167,22 +244,37 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Address not found.');
         }
 
+        $discountID = Discounts::where('code', session('discount_code'))->first()->id ?? null;
+        $grandTotal = number_format(session('discounted_total'), 2, '.', '');
+
         $order = new Orders();
         $order->invoice_number = uniqid('INV-');
         $order->customer_id = $customer->id;
-        $order->discount_id = $discount->id;
+        $order->discount_id = $discountID;
         $order->order_date = now();
         $order->total = number_format($total_amount, 2, '.', '');
+        $order->discount_amount = number_format(session('total_amount') - session('discounted_total'), 2, '.', ''); // Jumlah diskon yang diterapkan
+        // $order->grand_total = $grandTotal;
         $order->notes = $request->notes;
         $order->status = 'Pending';
         $order->save();
 
+        $paymentStatus = '';
+
+        if($request->payment_method == 'cod'){
+            $paymentStatus = 'not paid';
+        } else{
+            $paymentStatus = 'paid';
+        }
+
         $payment = new Payments();
         $payment->order_id = $order->id;
         $payment->customer_id = $customer->id;
-        $payment->amount = number_format($total_amount, 2, '.', '');
+        $payment->amount = $grandTotal;
         $payment->payment_date = now();
         $payment->payment_method = $request->payment_method;
+        $payment->account_number = $request->account_number;
+        $payment->payment_status = $paymentStatus;
         $payment->save();
 
         foreach ($cartItems as $item) {
@@ -199,6 +291,8 @@ class CartController extends Controller
             $product->stock = $product->stock - $item->qty;
             $product->save();
         }
+
+        Session::forget(['discount_id', 'discounted_total', 'total_amount', 'discount_code', 'discount_amount']);
 
         Cart::instance('cart_' . $user->id)->destroy();
 

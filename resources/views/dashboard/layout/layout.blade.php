@@ -7,6 +7,26 @@
     <title>Admin | @yield('title')</title>
 
     @include('dashboard.layout.link-script')
+    <style>
+        .product-images {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .product-images .relative {
+            position: relative;
+            margin: 5px;
+            /* Adjust the margin as needed */
+        }
+
+        .product-images img {
+            border-radius: 5px;
+        }
+
+        .product-images .absolute {
+            position: absolute;
+        }
+    </style>
 </head>
 
 <body>

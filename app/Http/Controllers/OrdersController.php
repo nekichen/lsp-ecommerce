@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
-use Illuminate\Http\Request;
+use App\Models\OrderDetails;
 use App\Models\Customers;
+use App\Models\Products;
+use App\Models\Sizes;
+use App\Models\Payments;
+use App\Models\ProductImages;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
@@ -16,7 +21,7 @@ class OrdersController extends Controller
     public function index()
     {
         //
-        $orders = Orders::paginate(10);
+        $orders = Orders::orderBy('id', 'desc')->paginate(10);
         $customers = Customers::all();
 
         return view('dashboard.orders.index', compact('orders', 'customers'), [
@@ -26,46 +31,22 @@ class OrdersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Orders  $orders
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Orders $orders)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function edit(Orders $orders)
+    public function edit($id)
     {
-        //
+        $orders = Orders::find($id);
+        $orderDetails = OrderDetails::where('order_id', $orders->id)->get();
+        $customers = Customers::where('id', $orders->customer_id)->first();
+        $products = Products::whereIn('id', $orderDetails->pluck('product_id'))->get();
+        $sizes = Sizes::whereIn('id', $orderDetails->pluck('size_id'))->get();
+        $images = ProductImages::whereIn('product_id', $orderDetails->pluck('product_id'))->get();
+        $payments = Payments::where('order_id', $orders->id)->first();
+
+        return view('dashboard.orders.edit', compact('orders', 'orderDetails', 'customers', 'products', 'sizes', 'images', 'payments'));
     }
 
     /**
@@ -75,9 +56,39 @@ class OrdersController extends Controller
      * @param  \App\Models\Orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Orders $orders)
+    public function update(Request $request, $id)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'status' => 'required|string|in:Pending,Processing,Shipped,Delivered,Cancelled',
+        ]);
+
+        // Find the order by ID
+        $order = Orders::findOrFail($id);
+
+        // Update the order status
+        $order->status = $request->input('status');
+        $order->save();
+
+        $paymentMethod = Payments::where('order_id', $order->id)->first();
+        
+        $products = Products::whereIn('id', OrderDetails::where('order_id', $order->id)->pluck('product_id'))->first();
+        $quantity = OrderDetails::where('order_id', $order->id)->sum('quantity');
+        
+        if ($order->status == 'Delivered') {
+            $paymentMethod->payment_status = 'paid';
+            $paymentMethod->save();
+        } elseif ($order->status == 'Cancelled') {
+            $paymentMethod->payment_status = 'cancelled';
+            $paymentMethod->amount = 0;
+            $paymentMethod->save();
+
+            $products->stock = $products->stock + $quantity;
+            $products->save();
+        }
+
+        // Redirect back with a success message
+        return redirect()->route('orders.index')->with('success', 'Order status updated successfully.');
     }
 
     /**

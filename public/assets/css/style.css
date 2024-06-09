@@ -984,6 +984,15 @@ img.cart-img {
   Product
 -----------------------*/
 
+.fa-star {
+	font-size: 2em;
+	cursor: pointer;
+}
+
+.fa-star.checked {
+	color: gold;
+}
+
 .product {
 	padding-top: 0;
 	padding-bottom: 60px;
@@ -1015,6 +1024,10 @@ img.cart-img {
 .product__item {
 	overflow: hidden;
 	margin-bottom: 40px;
+}
+
+.bw-image {
+    filter: grayscale(100%);
 }
 
 .product__item.sale .product__item__pic .label {
@@ -2785,6 +2798,24 @@ img.cart-img {
 	margin-top: 8px;
 }
 
+.checkout__order .account_number_field {
+    margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.checkout__order .account_number_field span {
+	color: #e53637;
+}
+
+.checkout__order .account_number_field input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 10px; /* Adjust as needed */
+}
+
 .checkout__order__products {
 	font-size: 16px;
 	color: #111111;
@@ -2829,6 +2860,15 @@ img.cart-img {
 	list-style: none;
 	font-size: 16px;
 	color: #111111;
+	line-height: 40px;
+	overflow: hidden;
+}
+
+.checkout__total__all li.discount {
+	list-style: none;
+	font-size: 16px;
+	font-weight: lighter;
+	color: #A91D3A;
 	line-height: 40px;
 	overflow: hidden;
 }

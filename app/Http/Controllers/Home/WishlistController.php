@@ -15,7 +15,10 @@ class WishlistController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $wishlistItems = Cart::instance('wishlist_' . $user->id)->content();
+        $wishlistItems = Cart::instance('wishlist_' . $user->id)->content()->sortByDesc(function ($item) {
+            // Retrieve the 'added_at' timestamp from item's options
+            return $item->options->added_at;
+        });
         $images = [];
         $products = [];
 
@@ -26,7 +29,7 @@ class WishlistController extends Controller
                 $images[$item->id] = ProductImages::where('product_id', $item->id)->first();
             }
         }
-
+        
         return view('landing.shop.wishlist', compact('wishlistItems', 'images', 'products'));
     }
 
@@ -40,7 +43,10 @@ class WishlistController extends Controller
             $product->name,
             1,
             $product->price,
-            ['user_id' => $user->id]
+            [
+                'user_id' => $user->id,
+                'added_at' => now()
+            ]
         )->associate('App\Models\Products');
 
         return redirect()->back()->with('success', 'Product added to wishlist!');

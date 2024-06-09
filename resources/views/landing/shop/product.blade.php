@@ -33,12 +33,14 @@
                             <div class="product__details__text">
                                 <h4>{{ $product->name }}</h4>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <span> - 5 Reviews</span>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $averageRating)
+                                            <i class="fa fa-star"></i>
+                                        @else
+                                            <i class="fa fa-star-o"></i>
+                                        @endif
+                                    @endfor
+                                    <span> — {{ $totalReviews }} Reviews</span>
                                 </div>
                                 <h3>${{ $product->price }}</h3>
                                 <div class="product__details__option">
@@ -133,32 +135,53 @@
                                     </div>
                                     <div class="tab-pane" id="tabs-6" role="tabpanel">
                                         <div class="product__details__tab__content">
-                                            <div class="product__details__tab__content__item">
-                                                <h5>Products Infomation</h5>
-                                                <p>A Pocket PC is a handheld computer, which features many of the same
-                                                    capabilities as a modern PC. These handy little devices allow
-                                                    individuals to retrieve and store e-mail messages, create a contact
-                                                    file, coordinate appointments, surf the internet, exchange text messages
-                                                    and more. Every product that is labeled as a Pocket PC must be
-                                                    accompanied with specific software to operate the unit and must feature
-                                                    a touchscreen and touchpad.</p>
-                                                <p>As is the case with any new technology product, the cost of a Pocket PC
-                                                    was substantial during it’s early release. For approximately $700.00,
-                                                    consumers could purchase one of top-of-the-line Pocket PCs in 2003.
-                                                    These days, customers are finding that prices have become much more
-                                                    reasonable now that the newness is wearing off. For approximately
-                                                    $350.00, a new Pocket PC can now be purchased.</p>
-                                            </div>
-                                            <div class="product__details__tab__content__item">
-                                                <h5>Material used</h5>
-                                                <p>Polyester is deemed lower quality due to its none natural quality’s. Made
-                                                    from synthetic materials, not natural like wool. Polyester suits become
-                                                    creased easily and are known for not being breathable. Polyester suits
-                                                    tend to have a shine to them compared to wool and cotton suits, this can
-                                                    make the suit look cheap. The texture of velvet is luxurious and
-                                                    breathable. Velvet is a great choice for dinner party jacket and can be
-                                                    worn all year round.</p>
-                                            </div>
+                                            <form action="{{ route('review', $product->id) }}" method="POST">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="rating">Rating:</label>
+                                                    <div id="rating" class="rating">
+                                                        <i class="fa fa-star" data-value="1"></i>
+                                                        <i class="fa fa-star" data-value="2"></i>
+                                                        <i class="fa fa-star" data-value="3"></i>
+                                                        <i class="fa fa-star" data-value="4"></i>
+                                                        <i class="fa fa-star" data-value="5"></i>
+                                                    </div>
+                                                    <input type="hidden" name="rating" id="rating-value">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="review">Review:</label>
+                                                    <textarea name="review" id="review" rows="3" class="form-control"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                                            </form>
+                                            @if ($product->reviews->isEmpty())
+                                                <div class="card my-4">
+                                                    <div class="card-body">
+                                                        <p>No reviews yet.</p>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                @foreach ($product->reviews->take(5) as $review)
+                                                    <div class="card my-4">
+                                                        <div class="card-body">
+                                                            <p><strong>{{ $review->customer->first_name . ' ' . $review->customer->last_name }}</strong>
+                                                            </p>
+                                                            <p>
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= $review->rating)
+                                                                        <i class="fa fa-star"
+                                                                            style="color: gold; font-size: 1rem;"></i>
+                                                                    @else
+                                                                        <i class="fa fa-star"
+                                                                            style="font-size: 1rem;"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </p>
+                                                            <p>"{{ $review->review }}"</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -180,37 +203,46 @@
                     </div>
                 </div>
                 <div class="row">
-                    @foreach ($relatedProducts as $item)
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg"
-                                    data-setbg="
+                    @if ($relatedProducts->count() == 0)
+                        <div class="col-lg-12 d-flex justify-content-center">
+                            <p>No related products found.</p>
+                        </div>
+                    @else
+                        @foreach ($relatedProducts as $item)
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="
                                     @php($productImages = $relatedImages->where('product_id', $item->id))
                                     @if ($productImages->count() > 0) @foreach ($productImages as $image)
                                             {{ asset('storage/' . $image->image) }}"
                                         @endforeach @endif>
                                     <ul class="product__hover">
-                                    <li><a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}"
-                                                alt=""></a></li>
-                                    <li><a href="{{ route('product', $item->slug) }}"><img
-                                                src="{{ asset('assets/img/icon/search.png') }}" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6>{{ $item->name }}</h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
-                                    <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        <li><a href="#"><img src="{{ asset('assets/img/icon/heart.png') }}"
+                                                    alt=""></a></li>
+                                        <li><a href="{{ route('product', $item->slug) }}"><img
+                                                    src="{{ asset('assets/img/icon/search.png') }}" alt=""></a>
+                                        </li>
+                                        </ul>
                                     </div>
-                                    <h5>${{ $item->price }}</h5>
+                                    <div class="product__item__text">
+                                        <h6>{{ $item->name }}</h6>
+                                        <a href="#" class="add-cart">+ Add To Cart</a>
+                                        <div class="rating">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $item->averageRating)
+                                                    <i class="fa fa-star" style="color: gold;"></i>
+                                                @else
+                                                    <i class="fa fa-star-o"></i>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <h5>${{ $item->price }}</h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </section>
@@ -270,5 +302,28 @@
                 hiddenQtyInput.value = qtyInput.value; // Update hidden input value
                 document.getElementById('add-to-cart').submit(); // Submit the form
             }
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const stars = document.querySelectorAll('.fa-star');
+                const ratingValue = document.getElementById('rating-value');
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        ratingValue.value = value;
+                        highlightStars(value);
+                    });
+                });
+
+                function highlightStars(value) {
+                    stars.forEach(star => {
+                        if (star.getAttribute('data-value') <= value) {
+                            star.classList.add('checked');
+                        } else {
+                            star.classList.remove('checked');
+                        }
+                    });
+                }
+            });
         </script>
     @endsection

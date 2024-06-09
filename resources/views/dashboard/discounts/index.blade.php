@@ -44,7 +44,7 @@
                                     {{ $item->amount . '%' }}
                                 </td>
                             @else
-                                <td class="px-4 py-3">
+                                <td class="px-4 py-3 text-center">
                                     {{ '$' . $item->amount }}
                                 </td>
                             @endif

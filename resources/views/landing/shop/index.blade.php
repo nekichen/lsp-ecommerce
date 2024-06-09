@@ -125,14 +125,15 @@
                             @if ($item->active == 'yes')
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
-                                        <div class="product__item__pic set-bg"
+                                        <div class="product__item__pic set-bg @if ($item->stock == 0) bw-image @endif"
                                             data-setbg="
-                                            @php($productImages = $images->where('product_id', $item->id))
+                                            @php $productImages = $images->where('product_id', $item->id) @endphp
                                             @if ($productImages->count() > 0) @foreach ($productImages as $image)
                                                         {{ asset('storage/' . $image->image) }}"
                                                     @endforeach @endif>
                                             <ul class="product__hover">
-                                            <li><a href="#" onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
+                                            <li><a href="#"
+                                                    onclick="addToWishlist({{ $item->id }}, '{{ $item->name }}', 1, '{{ $item->price }}')">
                                                     <img src="{{ asset('assets/img/icon/heart.png') }}" alt="">
                                                 </a>
                                             </li>
@@ -143,22 +144,28 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>{{ $item->name }}</h6>
-                                            <a href="#"
-                                                onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
-                                                class="add-cart">
-                                                + Add To Cart
-                                            </a>
+                                            @if ($item->stock > 0)
+                                                <a href="#"
+                                                    onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
+                                                    class="add-cart">
+                                                    + Add To Cart
+                                                </a>
+                                            @else
+                                                <a>Out of stock</a>
+                                            @endif
                                             <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $item->id }}">
                                                 <input type="hidden" name="quantity" value="1">
                                             </form>
                                             <div class="rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $item->averageRating)
+                                                        <i class="fa fa-star" style="color: gold;"></i>
+                                                    @else
+                                                        <i class="fa fa-star-o"></i>
+                                                    @endif
+                                                @endfor
                                             </div>
                                             <h5>${{ $item->price }}</h5>
                                         </div>

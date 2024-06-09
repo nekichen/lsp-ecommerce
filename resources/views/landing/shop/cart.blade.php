@@ -103,10 +103,27 @@
                             <h6>Cart total</h6>
                             <ul>
                                 <li>Subtotal
-                                    <span>${{ session('total_amount', Cart::instance('cart_' . Auth::user()->id)->subtotal()) }}</span>
+                                    @if (session('discounted_total'))
+                                        <span>${{ number_format(session('discounted_total'), 2) }}</span>
+                                    @else
+                                        <span>${{ Cart::instance('cart_' . Auth::user()->id)->subtotal() }}</span>
+                                    @endif
                                 </li>
                                 <li>Total
-                                    <span>${{ session('total_amount', Cart::instance('cart_' . Auth::user()->id)->total()) }}</span>
+                                    @if (session('discounted_total'))
+                                        <span>${{ number_format(session('discounted_total'), 2) }}</span>
+                                    @else
+                                        <span>${{ Cart::instance('cart_' . Auth::user()->id)->total() }}</span>
+                                    @endif
+                                </li>
+                                <li>Discount
+                                    @if (session('discount_amount'))
+                                        <span>
+                                            -
+                                            ${{ number_format(session('discount_amount'), 2) }}</span>
+                                    @else
+                                        <span>$0.00</span>
+                                    @endif
                                 </li>
                             </ul>
                             <a href="{{ route('checkout') }}" class="primary-btn">Proceed to checkout</a>

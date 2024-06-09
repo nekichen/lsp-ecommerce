@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customers;
 use App\Models\User;
+use App\Models\Countries;
 use Illuminate\Http\Request;
 
 class CustomersController extends Controller
@@ -18,7 +19,10 @@ class CustomersController extends Controller
         //
         $customers = Customers::paginate(10);
 
-        return view('dashboard.customers.index', compact('customers'), [
+        $users = User::all();
+        $country = Countries::all();
+
+        return view('dashboard.customers.index', compact('customers', 'users', 'country'), [
             'create' => route('customers.create'),
         ]);
     }

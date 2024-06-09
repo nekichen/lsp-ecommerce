@@ -136,7 +136,7 @@ class ProfileController extends Controller
         $customer->zip_code = $request->zip_code;
         $customer->save();
 
-        return redirect()->route('addresses')->with('success', 'Your address has been saved successfully.');
+        return redirect()->route('customer-address')->with('success', 'Your address has been saved successfully.');
     }
 
     public function editAddressPage($id)

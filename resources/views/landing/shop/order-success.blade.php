@@ -27,7 +27,7 @@
                 <div class="col-md-12 text-center">
                     <h2>Order Successful</h2>
                     <p>Thank you for your purchase! Your order has been placed successfully.</p>
-                    <a href="{{ route('shop') }}" class="primary-btn mt-5">Your Orders</a>
+                    <a href="{{ route('orders') }}" class="primary-btn mt-5">Your Orders</a>
                 </div>
             </div>
         </div>

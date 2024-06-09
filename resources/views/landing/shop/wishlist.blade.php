@@ -25,11 +25,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         @if ($wishlistItems->count() > 1)
-                            <p>Showing {{ $wishlistItems->count() }} items in your wishlist. 
+                            <p>Showing {{ $wishlistItems->count() }} items in your wishlist.
                                 <a href="javascript:void(0)" onclick="clearWishlist()">Clear</a>
                             </p>
                         @else
-                            <p>Showing {{ $wishlistItems->count() }} item in your wishlist. 
+                            <p>Showing {{ $wishlistItems->count() }} item in your wishlist.
                                 <a href="javascript:void(0)" onclick="clearWishlist()">Clear</a>
                             </p>
                         @endif
@@ -37,7 +37,7 @@
                     @foreach ($wishlistItems as $item)
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg"
+                                <div class="product__item__pic set-bg @if ($item->model->stock == 0) bw-image @endif"
                                     data-setbg="
                                         @if (isset($images[$item->id])) {{ asset('storage/' . $images[$item->id]->image) }} @endif">
                                     <ul class="product__hover">
@@ -54,11 +54,15 @@
                                 <div class="product__item__text">
                                     <h6>{{ $item->model->name }}</h6>
                                     @if (isset($item))
-                                        <a href="#"
-                                            onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
-                                            class="add-cart">
-                                            + Add To Cart
-                                        </a>
+                                        @if ($item->model->stock > 0)
+                                            <a href="#"
+                                                onclick="event.preventDefault(); document.getElementById('add-to-cart').submit()"
+                                                class="add-cart">
+                                                + Add To Cart
+                                            </a>
+                                        @else
+                                            <a>Out of stock</a>
+                                        @endif
                                         <form action="{{ route('add-to-cart') }}" id="add-to-cart" method="POST">
                                             @csrf
                                             @if (isset($item->id))

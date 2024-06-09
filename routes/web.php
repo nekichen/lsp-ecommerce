@@ -85,6 +85,7 @@ Route::prefix('/')->group(function () {
     Route::get('shop', [ShopController::class, 'index'])->name('shop');
     Route::get('shop/category/{categorySlug}', [ShopController::class, 'index'])->name('shop.category');
     Route::get('product/{slug}', [ShopController::class, 'product'])->name('product');
+    Route::post('/products/{product}/review', [ShopController::class, 'review'])->name('review');
 
 });
 
@@ -107,6 +108,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('brands', BrandsController::class);
         Route::resource('sizes', SizesController::class);
         Route::resource('products', ProductsController::class);
+        Route::get('products/activate/{id}', [ProductsController::class, 'activate'])->name('products.activate');
+        Route::get('products/deleteImage/{id}', [ProductsController::class, 'deleteImage'])->name('products.deleteImage');
         Route::resource('discounts', DiscountsController::class);
         Route::resource('orders', OrdersController::class);
         Route::resource('customers', CustomersController::class);

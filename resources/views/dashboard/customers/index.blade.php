@@ -22,16 +22,16 @@
                     @foreach ($customers as $item)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                {{ ($customers->currentPage() - 1) * $customers->perPage() + ($loop->iteration) }}
+                                {{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->iteration }}
                             </td>
                             <td class="px-4 py-3">
-                                {{ $item->name }}
+                                {{ $item->first_name . ' ' . $item->last_name }}
                             </td>
                             <td class="px-4 py-3">
                                 @if ($item->user_id)
                                     @php($user = $users->firstWhere('id', $item->user_id))
                                     @if ($user)
-                                        <li>{{ $user->email }}</li>
+                                        {{ $user->email }}
                                     @endif
                                 @endif
                             </td>
@@ -39,13 +39,16 @@
                                 {{ $item->phone }}
                             </td>
                             <td class="px-4 py-3">
-                                {{ $item->address1 }}
+                                @if ($item->country_id)
+                                    @php($countries = $country->firstWhere('id', $item->country_id))
+                                    @if ($countries)
+                                        {{ $item->address . ', ' . $item->city . ', ' . $item->zip_code }}
+                                        <br>
+                                        {{ $item->state . ', ' . $countries->name }}
+                                    @endif
+                                @endif
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                <a href="{{ route('customers.edit', $item->id) }}"
-                                    class="inline-flex items-center justify-between px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                                    Edit
-                                </a>
                                 <form action="{{ route('customers.destroy', $item->id) }}" method="post" id="form"
                                     class="inline-flex">
                                     @csrf

@@ -23,7 +23,7 @@
                     @foreach ($products as $item)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                {{ ($products->currentPage() - 1) * $products->perPage() + ($loop->iteration) }}
+                                {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
                             </td>
                             <td class="px-4 py-3">
                                 @php($productImages = $images->where('product_id', $item->id))
@@ -48,7 +48,15 @@
                                 {{ $item->price }}
                             </td>
                             <td class="px-4 py-3">
-                                {{ $item->active }}
+                                @if ($item->active == 'yes')
+                                    <a href="{{ route('products.activate', $item->id) }}">
+                                        <img src="{{ asset('assets/img/icon/check-circle-green.png') }}" alt="">
+                                    </a>
+                                @else
+                                    <a href="{{ route('products.activate', $item->id) }}">
+                                        <img src="{{ asset('assets/img/icon/x-circle-red.png') }}" alt="">
+                                    </a>
+                                @endif
                             </td>
                             <td class="px-4 py-3 text-xs">
                                 <a href="{{ route('products.edit', $item->id) }}"

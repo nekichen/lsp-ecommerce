@@ -16,14 +16,16 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number');
-            $table->foreignId('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->datetime('order_date');
-            $table->foreignId('discount_id')->references('id')->on('discounts')->onDelete('cascade')->nullable();
+            $table->foreignId('discount_id')->nullable()->constrained('discounts')->onDelete('cascade');
             $table->double('total', 10, 2);
+            $table->double('discount_amount', 10, 2)->default(0); // Kolom untuk menyimpan jumlah diskon yang diterapkan
+            $table->double('grand_total', 10, 2);
             $table->text('notes')->nullable();
             $table->enum('status', ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']);
             $table->timestamps();
-        });
+        });        
     }
 
     /**
