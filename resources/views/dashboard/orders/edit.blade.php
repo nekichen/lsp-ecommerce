@@ -60,7 +60,7 @@
                     @endif
                 @endif
                 <p class="text-gray-700 dark:text-gray-300 text-lg font-bold"><strong>Total Amount:</strong>
-                    ${{ number_format($orders->total, 2) }}</p>
+                    ${{ number_format($orders->grand_total, 2) }}</p>
                 <p class="text-gray-700 dark:text-gray-300 text-lg font-bold"><strong>Total Discount:</strong>
                     ${{ number_format($orders->discount_amount, 2) }}</p>
             </div>

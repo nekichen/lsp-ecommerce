@@ -27,7 +27,7 @@
             <div class="container">
                 <div class="signin-content">
                     <div class="signin-image">
-                        <figure><img src="{{ asset('assets/hoshi_ganteng.jpg') }}" alt="sing up image"></figure>
+                        <figure><img src="{{ asset('assets/img/instagram/instagram-4.jpg') }}" alt="sing up image"></figure>
                         <a href="{{ route('page') }}" class="signup-image-link">Create an account</a>
                     </div>
 

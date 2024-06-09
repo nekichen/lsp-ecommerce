@@ -254,7 +254,7 @@ class CartController extends Controller
         $order->order_date = now();
         $order->total = number_format($total_amount, 2, '.', '');
         $order->discount_amount = number_format(session('total_amount') - session('discounted_total'), 2, '.', ''); // Jumlah diskon yang diterapkan
-        // $order->grand_total = $grandTotal;
+        $order->grand_total = $grandTotal;
         $order->notes = $request->notes;
         $order->status = 'Pending';
         $order->save();

@@ -40,10 +40,6 @@
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="password" name="password" id="pass" placeholder="Password" required />
                             </div>
-                            {{-- <div class="form-group">
-                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="password" id="re_pass" placeholder="Repeat your password"/>
-                            </div> --}}
                             <div class="form-group">
                                 <input type="checkbox" name="role" id="agree-term" class="agree-term" required>
                                 <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all
@@ -56,7 +52,7 @@
                         </form>
                     </div>
                     <div class="signup-image">
-                        <figure><img src="{{ asset('assets/hoshi_ganteng.jpg') }}" alt="sing up image"></figure>
+                        <figure><img src="{{ asset('assets/img/instagram/instagram-2.jpg') }}" alt="sing up image"></figure>
                         <a href="{{ route('login') }}" class="signup-image-link">I am already member</a>
                     </div>
                 </div>
