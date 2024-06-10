@@ -9,6 +9,7 @@ use App\Models\Products;
 use App\Models\Sizes;
 use App\Models\Payments;
 use App\Models\ProductImages;
+use App\Models\Deliveries;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -75,9 +76,21 @@ class OrdersController extends Controller
         $products = Products::whereIn('id', OrderDetails::where('order_id', $order->id)->pluck('product_id'))->first();
         $quantity = OrderDetails::where('order_id', $order->id)->sum('quantity');
         
-        if ($order->status == 'Delivered') {
+        if ($order->status == 'Shipped') {
+            $deliveries = new Deliveries();
+            $deliveries->order_id = $order->id;
+            $deliveries->shipped_date = now();
+            $deliveries->tracking_code = uniqid('TC-');
+            $deliveries->status = 'Shipped';
+            $deliveries->save();
+        } elseif ($order->status == 'Delivered') {
             $paymentMethod->payment_status = 'paid';
             $paymentMethod->save();
+
+            $deliveries = Deliveries::where('order_id', $order->id)->first();
+            $deliveries->delivered_date = now();
+            $deliveries->status = 'Delivered';
+            $deliveries->save();
         } elseif ($order->status == 'Cancelled') {
             $paymentMethod->payment_status = 'cancelled';
             $paymentMethod->amount = 0;
@@ -85,7 +98,11 @@ class OrdersController extends Controller
 
             $products->stock = $products->stock + $quantity;
             $products->save();
-        }
+
+            $deliveries = Deliveries::where('order_id', $order->id)->first();
+            $deliveries->status = 'Cancelled';
+            $deliveries->save();
+        } 
 
         // Redirect back with a success message
         return redirect()->route('orders.index')->with('success', 'Order status updated successfully.');
@@ -100,5 +117,22 @@ class OrdersController extends Controller
     public function destroy(Orders $orders)
     {
         //
+    }
+
+    public function exportPDF()
+    {
+        // Ambil data order dari database
+        $orders = Orders::all();
+
+        // Data yang akan dikirim ke view
+        $data = [
+            'orders' => $orders
+        ];
+
+        // Load view dengan data
+        $pdf = PDF::loadView('orders_pdf', $data);
+
+        // Unduh PDF dengan nama orders.pdf
+        return $pdf->download('orders.pdf');
     }
 }

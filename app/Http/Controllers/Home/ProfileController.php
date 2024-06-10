@@ -190,9 +190,13 @@ class ProfileController extends Controller
 
         // Periksa apakah alamat ditemukan
         if ($address) {
+            // Nonaktifkan alamat lain yang saat ini aktif
+            Customers::where('is_active', 1)->update(['is_active' => 0]);
+
             // Set status alamat menjadi aktif
             $address->is_active = true;
             $address->save();
+
             return redirect()->back()->with('success', 'Address activated successfully.');
         }
 

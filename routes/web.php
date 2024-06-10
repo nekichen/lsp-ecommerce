@@ -114,5 +114,6 @@ Route::prefix('admin')->group(function () {
         Route::resource('orders', OrdersController::class);
         Route::resource('customers', CustomersController::class);
         Route::post('logout', [AdminController::class, 'logout'])->name('admin.logout');
+        Route::get('/export-pdf', [OrdersController::class, 'exportPDF'])->name('export-pdf');
     });
 });

@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <div class="checkout__input">
-                                <p>Order notes<span>Optional</span></p>
+                                <p>Order notes<span> (Optional)</span></p>
                                 <input type="text" placeholder="Notes about your order, e.g. special notes for delivery."
                                     name="notes">
                             </div>

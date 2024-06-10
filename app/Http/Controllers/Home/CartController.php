@@ -126,7 +126,7 @@ class CartController extends Controller
         $total = $total_amount - $discountAmount;
 
         // Mendapatkan alamat pengiriman pengguna
-        $addresses = Customers::where('user_id', $user->id)->with('country')->get();
+        $addresses = Customers::where('user_id', $user->id)->with('country')->where('is_active', 1)->get();
 
         if ($addresses->isEmpty()) {
             return redirect()->route('add-address-page')->with('error', 'Please add an address to proceed.');
@@ -230,10 +230,21 @@ class CartController extends Controller
         $request->validate([
             'address_id' => 'required|exists:customers,id',
             'payment_method' => 'required|in:cod,bank transfer,paypal',
-            'account_number' => 'required_if:payment_method,bank transfer|numeric',
+            'account_number' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->payment_method === 'bank transfer' && empty($value)) {
+                        $fail('The account number is required when the payment method is bank transfer.');
+                    }
+                    if ($request->payment_method !== 'bank transfer' && !empty($value)) {
+                        $fail('The account number must be null when the payment method is not bank transfer.');
+                    }
+                }
+            ],
             'notes' => 'nullable|string'
-        ]);
-
+        ]);        
+        
         $user = Auth::user();
         $cartItems = Cart::instance('cart_' . $user->id)->content();
         $total = floatval(str_replace(',', '', Cart::instance('cart_' . $user->id)->subtotal()));
@@ -245,7 +256,13 @@ class CartController extends Controller
         }
 
         $discountID = Discounts::where('code', session('discount_code'))->first()->id ?? null;
-        $grandTotal = number_format(session('discounted_total'), 2, '.', '');
+        $grandTotal = '';
+
+        if($request->session()->has('discounted_total')){
+            $grandTotal = number_format(session('discounted_total'), 2, '.', '');
+        } else {
+            $grandTotal = number_format($total_amount, 2, '.', '');
+        }
 
         $order = new Orders();
         $order->invoice_number = uniqid('INV-');

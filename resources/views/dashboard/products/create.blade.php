@@ -81,10 +81,10 @@
                     </div>
                     <div class="mb-6">
                         <label class="block text-sm">
-                            <span class="text-gray-700 dark:text-gray-400 font-semibold">Price</span>
+                            <span class="text-gray-700 dark:text-gray-400 font-semibold">Price </span><span class="text-red-700 dark:text-red-400">(in $USD)</span>
                             <input type="number" name="price" id="price"
                                 class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                value="0">
+                                placeholder="Price in U.S. Dollar">
                     </div>
                     <div class="mb-6">
                         <label class="block text-sm">

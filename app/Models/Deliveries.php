@@ -9,8 +9,10 @@ class Deliveries extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'price',
-        'status',
+        'order_id',
+        'shipped_date',
+        'delivered_date',
+        'tracking_code',
+        'status'
     ];
 }

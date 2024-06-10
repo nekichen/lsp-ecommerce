@@ -45,7 +45,7 @@
                                 {{ $item->stock }}
                             </td>
                             <td class="px-4 py-3">
-                                {{ $item->price }}
+                                ${{ $item->price }}
                             </td>
                             <td class="px-4 py-3">
                                 @if ($item->active == 'yes')

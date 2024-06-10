@@ -82,19 +82,20 @@
                             class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
                             <option value="Delivered" selected>Delivered</option>
                         </select>
+                    @elseif ($orders->status == 'Shipped')
+                        <select disabled
+                            class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+                            <option value="Shipped" selected>Shipped</option>
+                        </select>
                     @else
                         <select name="status" id="status"
                             class="block w-full mt-2 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
                             <option value="Pending"
-                                @if ($orders->status == 'Pending') selected @elseif ($orders->status == 'Processing' || $orders->status == 'Shipped' || $orders->status == 'Delivered') disabled @endif>
+                                @if ($orders->status == 'Pending') selected @elseif ($orders->status == 'Processing') disabled @endif>
                                 Pending</option>
                             <option value="Processing"
-                                @if ($orders->status == 'Processing') selected @elseif ($orders->status == 'Shipped' || $orders->status == 'Delivered') disabled @endif>
+                                @if ($orders->status == 'Processing') selected @endif>
                                 Processing</option>
-                            <option value="Shipped"
-                                @if ($orders->status == 'Shipped') selected @elseif ($orders->status == 'Delivered') disabled @endif>
-                                Shipped</option>
-                            <option value="Delivered" @if ($orders->status == 'Delivered') selected @endif>Delivered</option>
                             <option value="Cancelled" @if ($orders->status == 'Cancelled') selected @endif>Cancelled</option>
                         </select>
                     @endif
